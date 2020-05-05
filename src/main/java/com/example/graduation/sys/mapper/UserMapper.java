@@ -18,7 +18,4 @@ import org.apache.ibatis.annotations.Select;
  * @since 2020-05-04
  */
 public interface UserMapper extends BaseMapper<User> {
-    @Select("SELECT user_id,user_no,user_name,user_psd,user_role,user_level,last_login_time,last_logout_time FROM user ${ew.customSqlSegment}")
-//    IPage<User> selectPageVo(IPage<User> page);
-    IPage<User> selectPageVo(IPage<User> page ,@Param(Constants.WRAPPER) Wrapper<User> queryWrapper);
 }

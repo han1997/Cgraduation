@@ -1,9 +1,15 @@
 package com.example.graduation.sys.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.graduation.constants.StatusCode;
+import com.example.graduation.sys.dto.AjaxVoResult;
+import com.example.graduation.sys.entity.InternationalCooperation;
+import com.example.graduation.sys.service.IInternationalCooperationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -16,5 +22,93 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/sys/international-cooperation")
 public class InternationalCooperationController {
+    @Autowired
+    IInternationalCooperationService internationalCooperationService;
+
+    @RequestMapping("/list/{currPage}/{size}")
+    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, InternationalCooperation internationalCooperation) {
+        final Page<InternationalCooperation> page = new Page<InternationalCooperation>(currPage, size);
+        Wrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
+        Page internationalCooperations = null;
+        if (qw == null){
+            internationalCooperations = internationalCooperationService.page(page);
+        }else {
+            internationalCooperations = internationalCooperationService.page(page,qw);
+        }
+        if (internationalCooperations.getRecords().size() > 0) {
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), internationalCooperations);
+        }
+        return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
+    }
+
+    @PostMapping("/add")
+    public AjaxVoResult add(@RequestBody InternationalCooperation internationalCooperation) {
+        /**
+         *
+         * @description: 新增用户
+         * @param internationalCooperation
+         * @return: com.example.graduation.sys.dto.AjaxVoResult
+         * @time: 2020/5/5 4:12 下午
+         */
+        boolean b = internationalCooperationService.save(internationalCooperation);
+        if (b) {
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        }
+        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+    }
+
+    @PostMapping("/delete")
+    public AjaxVoResult delete(int internationalCooperationId) {
+        /**
+         *
+         * @description: 通过internationalCooperationId删除用户
+         * @param internationalCooperationId
+         * @return: com.example.graduation.sys.dto.AjaxVoResult
+         * @time: 2020/5/5 5:18 下午
+         */
+        InternationalCooperation internationalCooperation = new InternationalCooperation();
+        internationalCooperation.setIcId(internationalCooperationId);
+        boolean b = internationalCooperationService.removeById(internationalCooperationId);
+        if (b) {
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        }
+        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+    }
+
+    @PostMapping("/update")
+    public AjaxVoResult update(@RequestBody InternationalCooperation internationalCooperation) {
+        /**
+         *
+         * @description: 通过internationalCooperationId更新用户信息
+         * @param internationalCooperation
+         * @return: com.example.graduation.sys.dto.AjaxVoResult
+         * @time: 2020/5/5 5:18 下午
+         */
+        boolean b = internationalCooperationService.updateById(internationalCooperation);
+        if (b) {
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        }
+        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+    }
+    @PostMapping("/get")
+    public AjaxVoResult get(Page page,InternationalCooperation internationalCooperation){
+        /**
+         *
+         * @description: 条件查询用户
+         * @param page
+         * @param internationalCooperation
+         * @return: com.example.graduation.sys.dto.AjaxVoResult
+         * @time: 2020/5/5 5:18 下午
+         */
+        QueryWrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
+        if (page == null){
+            Page<InternationalCooperation> internationalCooperationPage = new Page<>(1,5);
+        }
+        Page page1 = internationalCooperationService.page(page, qw);
+        if (page1.getTotal() > 0){
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
+        }
+        return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
+    }
 
 }

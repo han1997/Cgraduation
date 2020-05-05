@@ -44,7 +44,7 @@ public class UserController {
 
     @RequestMapping("/add")
     public AjaxVoResult add(){
-        userService.saveOrUpdate()
+        userService.saveOrUpdate(new User());
         return new AjaxVoResult(StatusCode.ERROR.getCode(),StatusCode.ERROR.getMessage(),null);
     }
 }

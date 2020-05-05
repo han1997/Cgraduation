@@ -25,6 +25,7 @@ public enum StatusCode {
     ADMIN_USER_UPDATE_FAILED(10103, "资源更新失败"),
     ADMIN_USER_DELETE_FAILED(10104, "资源删除失败"),
     ROLE_LIST_NOT_EXISTS(10105, "角色列表不能为空"),
+    USERNO_EXISTS(10106, "账号已存在"),
     TOKEN_NOT_AVAILABLE(200001, "AccessToken已被注销，请重新登录"),
     TOKEN_IS_EMPTY(200002, "AccessToken为空，请检查参数"),
     ACCESS_TOKEN_EXPIRED(200003, "AccessToken已过期"),

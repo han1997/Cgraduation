@@ -4,12 +4,16 @@ package com.example.graduation.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.graduation.annotations.LoginRequire;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.User;
 import com.example.graduation.sys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -91,6 +95,7 @@ public class UserController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
     @PostMapping("/get")
+    @LoginRequire(role = 2)
     public AjaxVoResult get(Page page,User user){
         /**
          *
@@ -109,5 +114,18 @@ public class UserController {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+    }
+
+    @PostMapping("/register")
+    public AjaxVoResult register(@RequestBody User user){
+        QueryWrapper<User> qw = new QueryWrapper<>();
+//        学号唯一，作为匹配
+        qw.eq("user_no",user.getUserNo());
+        return userService.register(qw,user);
+    }
+
+    @PostMapping("/login")
+    public AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response){
+        return userService.login(user,request,response);
     }
 }

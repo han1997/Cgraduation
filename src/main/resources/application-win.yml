@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:D:\hhyProjects\Cgraduation\src\main\resources\h2\graduation
+    username: sa
+    password: sa

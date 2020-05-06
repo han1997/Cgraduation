@@ -4,3 +4,6 @@ spring:
     url: jdbc:h2:/home/hanhuiyuan1997_gmail_com/code/Cgraduation/src/main/resources/h2/graduation
     username: sa
     password: sa
+  h2:
+    console:
+      enabled: true

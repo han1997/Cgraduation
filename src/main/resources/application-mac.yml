@@ -4,3 +4,6 @@ spring:
     url: jdbc:h2:/Users/handaxingyuner/code/gitCode/graduation/src/main/resources/h2/graduation;AUTO_SERVER=TRUE
     username: sa
     password: sa
+  h2:
+    console:
+      enabled: true

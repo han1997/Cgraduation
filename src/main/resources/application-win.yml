@@ -4,3 +4,7 @@ spring:
     url: jdbc:h2:D:\hhyProjects\Cgraduation\src\main\resources\h2\graduation
     username: sa
     password: sa
+
+  h2:
+    console:
+      enabled: true

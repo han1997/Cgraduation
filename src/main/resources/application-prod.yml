@@ -7,3 +7,7 @@ spring:
   h2:
     console:
       enabled: true
+logging:
+  level: info
+  file:
+    path: ~/graduation/log/

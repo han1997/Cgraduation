@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:/home/hanhuiyuan1997_gmail_com/code/Cgraduation/src/main/resources/h2/graduation
+    url: jdbc:h2:tcp://35.241.68.51:19200/~/h2/graduation;AUTO_SERVER=TRUE
     username: sa
     password: sa
   h2:

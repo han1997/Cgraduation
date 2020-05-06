@@ -1,10 +1,14 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://35.241.68.51:19200/~/h2/graduation;AUTO_SERVER=TRUE
-    username: sa
-    password: sa
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://35.241.68.51:3306/graduation
+    username: root
+    password: f877j/fC^-7b
 
   h2:
     console:
       enabled: true
+logging:
+  config: classpath:log4j2.xml
+  level:
+    root: info

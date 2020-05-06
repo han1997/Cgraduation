@@ -9,6 +9,8 @@ import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.User;
 import com.example.graduation.sys.service.IUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +25,14 @@ import javax.servlet.http.HttpServletResponse;
  * @author test
  * @since 2020-05-04
  */
+@Api(tags = "用户相关接口", description = "提供用户相关的 Rest API")
 @RestController
 @RequestMapping("/sys/user")
 public class UserController {
     @Autowired
     IUserService userService;
 
+    @ApiOperation("分页查询所有用户接口")
     @RequestMapping("/list/{currPage}/{size}")
     public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, User user) {
         final Page<User> page = new Page<User>(currPage, size);
@@ -45,6 +49,7 @@ public class UserController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @ApiOperation("新增用户接口")
     @PostMapping("/add")
     public AjaxVoResult add(@RequestBody User user) {
         /**
@@ -61,6 +66,7 @@ public class UserController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @ApiOperation("删除用户接口")
     @PostMapping("/delete")
     public AjaxVoResult delete(int userId) {
         /**
@@ -79,6 +85,7 @@ public class UserController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @ApiOperation("更新用户接口")
     @PostMapping("/update")
     public AjaxVoResult update(User user) {
         /**
@@ -94,6 +101,7 @@ public class UserController {
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
+    @ApiOperation("获取单个用户信息接口")
     @PostMapping("/get")
     @LoginRequire(role = 2)
     public AjaxVoResult get(Page page,User user){
@@ -116,6 +124,7 @@ public class UserController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @ApiOperation("用户注册接口")
     @PostMapping("/register")
     public AjaxVoResult register(@RequestBody User user){
         QueryWrapper<User> qw = new QueryWrapper<>();
@@ -124,8 +133,15 @@ public class UserController {
         return userService.register(qw,user);
     }
 
+    @ApiOperation("用户登录接口")
     @PostMapping("/login")
     public AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response){
         return userService.login(user,request,response);
+    }
+
+    @ApiOperation("用户注销接口")
+    @RequestMapping("/logout")
+    public AjaxVoResult logout(HttpServletRequest request){
+        return userService.logout(request);
     }
 }

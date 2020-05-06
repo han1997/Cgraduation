@@ -26,9 +26,9 @@ public class ProjectController {
     IProjectService projectService;
 
     @RequestMapping("/list/{currPage}/{size}")
-    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, Project user) {
+    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, Project project) {
         final Page<Project> page = new Page<Project>(currPage, size);
-        Wrapper<Project> qw = new QueryWrapper<>(user);
+        Wrapper<Project> qw = new QueryWrapper<>(project);
         Page users = null;
         if (qw == null){
             users = projectService.page(page);
@@ -42,15 +42,15 @@ public class ProjectController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody Project user) {
+    public AjaxVoResult add(@RequestBody Project project) {
         /**
          *
          * @description: 新增用户
-         * @param user
+         * @param project
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
-        boolean b = projectService.save(user);
+        boolean b = projectService.save(project);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
         }
@@ -58,17 +58,17 @@ public class ProjectController {
     }
 
     @PostMapping("/delete")
-    public AjaxVoResult delete(int userId) {
+    public AjaxVoResult delete(int projectId) {
         /**
          *
-         * @description: 通过userId删除用户
-         * @param userId
+         * @description: 通过projectId删除用户
+         * @param projectId
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
         Project user = new Project();
-        user.setProjectId(userId);
-        boolean b = projectService.removeById(userId);
+        user.setProjectId(projectId);
+        boolean b = projectService.removeById(projectId);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
         }
@@ -76,31 +76,31 @@ public class ProjectController {
     }
 
     @PostMapping("/update")
-    public AjaxVoResult update(@RequestBody Project user) {
+    public AjaxVoResult update(@RequestBody Project project) {
         /**
          *
          * @description: 通过userId更新用户信息
-         * @param user
+         * @param project
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        boolean b = projectService.updateById(user);
+        boolean b = projectService.updateById(project);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
     @PostMapping("/get")
-    public AjaxVoResult get(Page page,Project user){
+    public AjaxVoResult get(Page page,Project project){
         /**
          *
          * @description: 条件查询用户
          * @param page
-         * @param user
+         * @param project
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        QueryWrapper<Project> qw = new QueryWrapper<>(user);
+        QueryWrapper<Project> qw = new QueryWrapper<>(project);
         if (page == null){
             Page<Project> userPage = new Page<>(1,5);
         }

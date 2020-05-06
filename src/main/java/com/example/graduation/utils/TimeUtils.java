@@ -9,13 +9,13 @@ import java.util.Date;
  * 2020/3/17
  */
 public class TimeUtils {
-    public static Timestamp getDateTime(){
+    public static String getDateTime(){
         //获得系统时间. 
         Date date = new Date();
         String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
         //把时间转换 
-        Timestamp goodsC_date = Timestamp.valueOf(nowTime);
-        return goodsC_date;
+//        Timestamp goodsC_date = Timestamp.valueOf(nowTime);
+        return nowTime;
     }
 
 }

@@ -20,4 +20,5 @@ public interface IUserService extends IService<User> {
     AjaxVoResult register(QueryWrapper<User> queryWrapper, User user);
     AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response);
 
+    AjaxVoResult logout(HttpServletRequest request);
 }

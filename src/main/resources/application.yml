@@ -5,10 +5,7 @@ spring:
     username: root
     password: f877j/fC^-7b
 
-  h2:
-    console:
-      enabled: true
 logging:
   config: classpath:log4j2.xml
   level:
-    root: info
+    com.example.graduation: info

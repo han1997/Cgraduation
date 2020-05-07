@@ -30,4 +30,7 @@ build/
 ### VS Code ###
 .vscode/
 
+=======
+### log4j2 ###
+logs/
 log/

@@ -21,4 +21,7 @@ public interface IUserService extends IService<User> {
     AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response);
 
     AjaxVoResult logout(HttpServletRequest request);
+
+    AjaxVoResult addUser(User user);
+    void psdEnc(User user);
 }

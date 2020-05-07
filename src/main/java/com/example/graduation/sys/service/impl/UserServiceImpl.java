@@ -14,6 +14,7 @@ import com.example.graduation.utils.PasswordStorage;
 import com.example.graduation.utils.TimeUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import java.util.HashMap;
  * @since 2020-05-04
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
     @Autowired
     UserMapper userMapper;
@@ -43,15 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (userFromDb == null) {
 //            数据库对应该学号不存在账户
 //            密码做加密
-            String hashPsd = "";
-            try {
-                hashPsd = PasswordStorage.createHash(user.getUserPsd());
-            } catch (PasswordStorage.CannotPerformOperationException e) {
-                e.printStackTrace();
-            }
-            if (StringUtils.isNotBlank(hashPsd)) {
-                user.setUserPsd(hashPsd);
-            }
+            psdEnc(user);
             boolean b = save(user);
             if (b) {
                 return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
@@ -59,6 +53,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return new AjaxVoResult(StatusCode.ADMIN_USER_INSERT_FAILED.getCode(), StatusCode.ADMIN_USER_INSERT_FAILED.getMessage(), b);
         }
         return new AjaxVoResult(StatusCode.USERNO_EXISTS.getCode(), StatusCode.USERNO_EXISTS.getMessage(), null);
+    }
+
+    @Override
+    public void psdEnc(User user) {
+        String hashPsd = "";
+        try {
+            hashPsd = PasswordStorage.createHash(user.getUserPsd());
+        } catch (PasswordStorage.CannotPerformOperationException e) {
+            log.error("密码加密错误");
+        }
+        if (StringUtils.isNotBlank(hashPsd)) {
+            user.setUserPsd(hashPsd);
+        }
     }
 
     @Override
@@ -117,10 +124,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_no", user.getUserNo());
             User userFromdb = getOne(queryWrapper);
-            if (userFromdb != null){
+            if (userFromdb != null) {
                 userFromdb.setLastLogoutTime(TimeUtils.getDateTime());
                 updateById(userFromdb);
-            }else {
+            } else {
                 return new AjaxVoResult(StatusCode.ADMIN_USER_NOT_FOUND.getCode(), StatusCode.ADMIN_USER_NOT_FOUND.getMessage(), null);
 
             }
@@ -128,4 +135,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //        session没有user信息，用户未登录
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
     }
+
+    @Override
+    public AjaxVoResult addUser(User user) {
+//        默认userno不为空，先查询该userno是否已被注册
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_no", user.getUserNo());
+        User userFromDb = getOne(queryWrapper);
+        boolean b = false;
+        if (userFromDb == null) {
+//        没有注册，则密码加密，写数据库，返回1
+            psdEnc(user);
+            try {
+                int insert = userMapper.insert(user);
+                if (insert == 1) {
+                    b = true;
+                }
+            } catch (Exception e) {
+                log.error("写" + user.toString() + "入数据库错误");
+                return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "写" + user.toString() + "入数据库错误");
+            }
+        }else {
+            log.error("" + user.getUserNo() + "该用户已经注册");
+            return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "" + user.getUserNo() + "该用户已经注册");
+        }
+//        注册了返回0
+        if (b) {
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "" + user.getUserNo() + "注册成功");
+        }
+        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "" + user.getUserNo() + "注册失败");
+    }
+
 }

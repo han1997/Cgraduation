@@ -8,6 +8,8 @@ import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.ProjectMember;
 import com.example.graduation.sys.service.IProjectMemberService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +22,14 @@ import org.springframework.web.bind.annotation.*;
  * @since 2020-05-04
  */
 @RestController
+@Api(tags = "用户相关接口", description = "提供用户相关的 Rest API")
 @RequestMapping("/sys/project-member")
 public class ProjectMemberController {
     @Autowired
     IProjectMemberService projectMemberService;
 
     @RequestMapping("/list/{currPage}/{size}")
+    @ApiOperation("管理员分页查询所有项目成员接口")
     public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, ProjectMember projectMember) {
         final Page<ProjectMember> page = new Page<ProjectMember>(currPage, size);
         Wrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);

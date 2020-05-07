@@ -70,7 +70,7 @@ public class UserController {
 
     @ApiOperation("管理员新增用户接口")
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody User user) {
+    public AjaxVoResult add(User user) {
         /**
          *
          * @description: 新增用户
@@ -146,7 +146,7 @@ public class UserController {
 
     @ApiOperation("用户注册接口")
     @PostMapping("/register")
-    public AjaxVoResult register(@RequestBody User user) {
+    public AjaxVoResult register(User user) {
         QueryWrapper<User> qw = new QueryWrapper<>();
 //        学号唯一，作为匹配
         qw.eq("user_no", user.getUserNo());

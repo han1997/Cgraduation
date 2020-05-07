@@ -30,10 +30,10 @@ public class InternationalCooperationController {
         final Page<InternationalCooperation> page = new Page<InternationalCooperation>(currPage, size);
         Wrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
         Page internationalCooperations = null;
-        if (qw == null){
+        if (qw == null) {
             internationalCooperations = internationalCooperationService.page(page);
-        }else {
-            internationalCooperations = internationalCooperationService.page(page,qw);
+        } else {
+            internationalCooperations = internationalCooperationService.page(page, qw);
         }
         if (internationalCooperations.getRecords().size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), internationalCooperations);
@@ -42,7 +42,7 @@ public class InternationalCooperationController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody InternationalCooperation internationalCooperation) {
+    public AjaxVoResult add(InternationalCooperation internationalCooperation) {
         /**
          *
          * @description: 新增用户
@@ -76,7 +76,7 @@ public class InternationalCooperationController {
     }
 
     @PostMapping("/update")
-    public AjaxVoResult update(@RequestBody InternationalCooperation internationalCooperation) {
+    public AjaxVoResult update(InternationalCooperation internationalCooperation) {
         /**
          *
          * @description: 通过internationalCooperationId更新用户信息
@@ -90,8 +90,9 @@ public class InternationalCooperationController {
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
+
     @PostMapping("/get")
-    public AjaxVoResult get(Page page,InternationalCooperation internationalCooperation){
+    public AjaxVoResult get(Page page, InternationalCooperation internationalCooperation) {
         /**
          *
          * @description: 条件查询用户
@@ -101,11 +102,11 @@ public class InternationalCooperationController {
          * @time: 2020/5/5 5:18 下午
          */
         QueryWrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
-        if (page == null){
-            Page<InternationalCooperation> internationalCooperationPage = new Page<>(1,5);
+        if (page == null) {
+            Page<InternationalCooperation> internationalCooperationPage = new Page<>(1, 5);
         }
         Page page1 = internationalCooperationService.page(page, qw);
-        if (page1.getTotal() > 0){
+        if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

@@ -30,10 +30,10 @@ public class ProjectController {
         final Page<Project> page = new Page<Project>(currPage, size);
         Wrapper<Project> qw = new QueryWrapper<>(project);
         Page users = null;
-        if (qw == null){
+        if (qw == null) {
             users = projectService.page(page);
-        }else {
-            users = projectService.page(page,qw);
+        } else {
+            users = projectService.page(page, qw);
         }
         if (users.getRecords().size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), users);
@@ -42,7 +42,7 @@ public class ProjectController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody Project project) {
+    public AjaxVoResult add(Project project) {
         /**
          *
          * @description: 新增用户
@@ -76,7 +76,7 @@ public class ProjectController {
     }
 
     @PostMapping("/update")
-    public AjaxVoResult update(@RequestBody Project project) {
+    public AjaxVoResult update(Project project) {
         /**
          *
          * @description: 通过userId更新用户信息
@@ -90,8 +90,9 @@ public class ProjectController {
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
+
     @PostMapping("/get")
-    public AjaxVoResult get(Page page,Project project){
+    public AjaxVoResult get(Page page, Project project) {
         /**
          *
          * @description: 条件查询用户
@@ -101,11 +102,11 @@ public class ProjectController {
          * @time: 2020/5/5 5:18 下午
          */
         QueryWrapper<Project> qw = new QueryWrapper<>(project);
-        if (page == null){
-            Page<Project> userPage = new Page<>(1,5);
+        if (page == null) {
+            Page<Project> userPage = new Page<>(1, 5);
         }
         Page page1 = projectService.page(page, qw);
-        if (page1.getTotal() > 0){
+        if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

@@ -42,7 +42,7 @@ public class CourseController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody Course course) {
+    public AjaxVoResult add(Course course) {
         /**
          *
          * @description: 新增用户
@@ -76,7 +76,7 @@ public class CourseController {
     }
 
     @PostMapping("/update")
-    public AjaxVoResult update(@RequestBody Course course) {
+    public AjaxVoResult update(Course course) {
         /**
          *
          * @description: 通过courseId更新用户信息

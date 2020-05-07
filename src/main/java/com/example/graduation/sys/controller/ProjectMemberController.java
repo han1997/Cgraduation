@@ -30,10 +30,10 @@ public class ProjectMemberController {
         final Page<ProjectMember> page = new Page<ProjectMember>(currPage, size);
         Wrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
         Page projectMembers = null;
-        if (qw == null){
+        if (qw == null) {
             projectMembers = projectMemberService.page(page);
-        }else {
-            projectMembers = projectMemberService.page(page,qw);
+        } else {
+            projectMembers = projectMemberService.page(page, qw);
         }
         if (projectMembers.getRecords().size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMembers);
@@ -42,7 +42,7 @@ public class ProjectMemberController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody ProjectMember projectMember) {
+    public AjaxVoResult add(ProjectMember projectMember) {
         /**
          *
          * @description: 新增用户
@@ -76,7 +76,7 @@ public class ProjectMemberController {
     }
 
     @PostMapping("/update")
-    public AjaxVoResult update(@RequestBody ProjectMember projectMember) {
+    public AjaxVoResult update(ProjectMember projectMember) {
         /**
          *
          * @description: 通过projectMemberId更新用户信息
@@ -90,8 +90,9 @@ public class ProjectMemberController {
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
+
     @PostMapping("/get")
-    public AjaxVoResult get(Page page,ProjectMember projectMember){
+    public AjaxVoResult get(Page page, ProjectMember projectMember) {
         /**
          *
          * @description: 条件查询用户
@@ -101,11 +102,11 @@ public class ProjectMemberController {
          * @time: 2020/5/5 5:18 下午
          */
         QueryWrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
-        if (page == null){
-            Page<ProjectMember> projectMemberPage = new Page<>(1,5);
+        if (page == null) {
+            Page<ProjectMember> projectMemberPage = new Page<>(1, 5);
         }
         Page page1 = projectMemberService.page(page, qw);
-        if (page1.getTotal() > 0){
+        if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

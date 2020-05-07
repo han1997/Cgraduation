@@ -197,4 +197,9 @@ public class PasswordStorage {
         return Base64.getEncoder().encodeToString(array);
     }
 
+    public static void main(String[] args) throws CannotPerformOperationException {
+        String admin = createHash("123");
+        System.out.println(admin);
+    }
+
 }

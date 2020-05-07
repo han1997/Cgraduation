@@ -72,7 +72,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional
     public AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response) {
         final QueryWrapper<User> qw = new QueryWrapper<>();
+//        使用userno + userrole验证用户
         qw.eq("user_no", user.getUserNo());
+        qw.eq("user_role", user.getUserRole());
         User userFromDb = getOne(qw);
         if (userFromDb != null) {
 //            该学号创建了用户帐号验证密码
@@ -89,6 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //                密码正确，
 //                更新数据库登录时间
                 userFromDb.setLastLoginTime(TimeUtils.getDateTime());
+                System.out.println("------------>上次登录时间：" + userFromDb.getLastLoginTime());
                 try {
                     updateById(userFromDb);
                 } catch (Exception e) {
@@ -97,16 +100,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 }
 //                写session
                 HttpSession session = request.getSession();
-                User sessionUser = new User();
-                sessionUser.setUserNo(userFromDb.getUserNo());
-                sessionUser.setUserName(userFromDb.getUserName());
-                sessionUser.setUserRole(userFromDb.getUserRole());
-                sessionUser.setUserLevel(userFromDb.getUserLevel());
-                sessionUser.setLastLoginTime(userFromDb.getLastLoginTime());
-                sessionUser.setLastLogoutTime(userFromDb.getLastLogoutTime());
                 session.setAttribute("user", userFromDb);
-
-                return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+                HashMap<String, String> userMap = new HashMap<>();
+                userMap.put("学号",userFromDb.getUserNo());
+                userMap.put("姓名",userFromDb.getUserName());
+                return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), userMap);
             }
             return new AjaxVoResult(StatusCode.ADMIN_USER_WRONG_PASSWORD.getCode(), StatusCode.ADMIN_USER_WRONG_PASSWORD.getMessage(), null);
         }

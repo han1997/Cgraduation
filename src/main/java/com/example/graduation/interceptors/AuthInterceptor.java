@@ -48,10 +48,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
 
-/*//                写jsessionid到cookie
-                String sessionId = session.getId();
-                CookieUtil.setCookie(request,response,"sessionId",sessionId,60*15,true);*/
-
 //                判断浏览网页需要的角色权限
                 int rolePerm = loginRequire.role();
                 if (Integer.parseInt(user.getUserRole()) > rolePerm){

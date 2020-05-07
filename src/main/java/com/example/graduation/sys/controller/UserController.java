@@ -78,6 +78,8 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
+        //        设置默认密码
+        user.setUserPsd(user.getUserNo());
         return userService.addUser(user);
 
     }
@@ -121,6 +123,7 @@ public class UserController {
 
     @ApiOperation("教师以上权限获取单个用户信息接口")
     @PostMapping("/get")
+    @LoginRequire(role = 1)
     public AjaxVoResult get(Page page, User user) {
         /**
          *
@@ -147,6 +150,7 @@ public class UserController {
         QueryWrapper<User> qw = new QueryWrapper<>();
 //        学号唯一，作为匹配
         qw.eq("user_no", user.getUserNo());
+        user.setUserPsd(user.getUserNo());
         return userService.register(qw, user);
     }
 

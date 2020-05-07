@@ -34,3 +34,5 @@ build/
 ### log4j2 ###
 logs/
 log/
+### mac ###
+.DS_Store

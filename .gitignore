@@ -34,3 +34,4 @@ build/
 ### log4j2 ###
 logs/
 log/
+*.log

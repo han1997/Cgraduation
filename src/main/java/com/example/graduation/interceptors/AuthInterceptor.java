@@ -23,7 +23,15 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     IUserService userService;
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//        请求跨域
+        response.setHeader("Access-Control-Allow-Origin","*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
         HandlerMethod handlerMethod = null;
         if (handler instanceof HandlerMethod){
             handlerMethod = (HandlerMethod) handler;

@@ -19,6 +19,7 @@ import com.example.graduation.utils.TimeUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -70,7 +71,7 @@ public class UserController {
 
     @ApiOperation("管理员新增用户接口")
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody User user) {
+    public AjaxVoResult add(User user) {
         /**
          *
          * @description: 新增用户
@@ -78,6 +79,8 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
+        //        设置默认密码
+        user.setUserPsd(user.getUserNo());
         return userService.addUser(user);
 
     }
@@ -121,6 +124,7 @@ public class UserController {
 
     @ApiOperation("教师以上权限获取单个用户信息接口")
     @PostMapping("/get")
+    @LoginRequire(role = 1)
     public AjaxVoResult get(Page page, User user) {
         /**
          *
@@ -143,16 +147,21 @@ public class UserController {
 
     @ApiOperation("用户注册接口")
     @PostMapping("/register")
-    public AjaxVoResult register(@RequestBody User user) {
+    public AjaxVoResult register(User user) {
         QueryWrapper<User> qw = new QueryWrapper<>();
 //        学号唯一，作为匹配
         qw.eq("user_no", user.getUserNo());
+        user.setUserPsd(user.getUserNo());
         return userService.register(qw, user);
     }
 
     @ApiOperation("用户登录接口")
     @PostMapping("/login")
     public AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response) {
+        if (StringUtils.isBlank(user.getUserRole())){
+//            如果没有选用户角色，默认学生
+            user.setUserRole("3");
+        }
         return userService.login(user, request, response);
     }
 

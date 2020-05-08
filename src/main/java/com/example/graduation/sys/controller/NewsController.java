@@ -30,10 +30,10 @@ public class NewsController {
         final Page<News> page = new Page<News>(currPage, size);
         Wrapper<News> qw = new QueryWrapper<>(news);
         Page newss = null;
-        if (qw == null){
+        if (qw == null) {
             newss = newsService.page(page);
-        }else {
-            newss = newsService.page(page,qw);
+        } else {
+            newss = newsService.page(page, qw);
         }
         if (newss.getRecords().size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), newss);
@@ -42,7 +42,7 @@ public class NewsController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(@RequestBody News news) {
+    public AjaxVoResult add(News news) {
         /**
          *
          * @description: 新增用户
@@ -76,7 +76,7 @@ public class NewsController {
     }
 
     @PostMapping("/update")
-    public AjaxVoResult update(@RequestBody News news) {
+    public AjaxVoResult update(News news) {
         /**
          *
          * @description: 通过newsId更新用户信息
@@ -90,8 +90,9 @@ public class NewsController {
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
+
     @PostMapping("/get")
-    public AjaxVoResult get(Page page,News news){
+    public AjaxVoResult get(Page page, News news) {
         /**
          *
          * @description: 条件查询用户
@@ -101,11 +102,11 @@ public class NewsController {
          * @time: 2020/5/5 5:18 下午
          */
         QueryWrapper<News> qw = new QueryWrapper<>(news);
-        if (page == null){
-            Page<News> newsPage = new Page<>(1,5);
+        if (page == null) {
+            Page<News> newsPage = new Page<>(1, 5);
         }
         Page page1 = newsService.page(page, qw);
-        if (page1.getTotal() > 0){
+        if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

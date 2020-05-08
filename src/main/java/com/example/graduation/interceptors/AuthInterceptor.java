@@ -23,7 +23,15 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     IUserService userService;
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//        请求跨域
+        response.setHeader("Access-Control-Allow-Origin","*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
         HandlerMethod handlerMethod = null;
         if (handler instanceof HandlerMethod){
             handlerMethod = (HandlerMethod) handler;
@@ -39,10 +47,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     response.sendRedirect("https://www.baidu.com");
                     return false;
                 }
-
-/*//                写jsessionid到cookie
-                String sessionId = session.getId();
-                CookieUtil.setCookie(request,response,"sessionId",sessionId,60*15,true);*/
 
 //                判断浏览网页需要的角色权限
                 int rolePerm = loginRequire.role();

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="http://127.0.0.1:8080/sys/user/importExcel" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="file">
+        <button type="submit">上传</button>
+    </form>
+    <!-- <form action="http://127.0.0.1:8080/sys/user/login" method="POST"> -->
+        <input type="text" name="userNo" id="userNo">
+        <input type="password" name="userPsd" id="userPsd">
+        <button type="submit" onclick="login()">登录</button>
+    <!-- </form> -->
+
+    <a href="http://127.0.0.1:8080/sys/user/logout">注销</a>
+    <input type="text" name="userName" id="name1">
+    <button id="query" onclick="query()">查询</button>
+	<button onclick="downloadExcel()">下载excel</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+<script>
+	function login(){
+        var userNo = $("input[name = userNo]").val();
+		var userPsd = $("input[name = userPsd]").val();
+		console.log(userNo + userPsd);
+        $.ajax({
+            url: "http://127.0.0.1:8080/sys/user/login",
+            method: "POST",
+            data: {
+				"userNo": userNo,
+				"userPsd": userPsd
+			},
+            //跨域请求带cookie
+            xhrFields:{
+                withCredentials:true
+            },
+            success: function(data){
+                console.log(data);
+            },
+            error: function(data){
+                console.log("error：" + data.data);
+            }
+
+        })
+    }
+
+    function query(){
+        var userName = $("#name1").val();
+        $.ajax({
+            url: "http://127.0.0.1:8080/sys/user/get",
+            method: "POST",
+            data: userName,
+            success: function(data){
+                console.log(data);
+            },
+            error: function(data){
+                console.log("error：" + data.data);
+            }
+
+        })
+    }
+
+	function downloadExcel(){
+		$.ajax({
+            url: "http://127.0.0.1:8080/sys/user/downloadExcel",
+            method: "POST",
+            success: function(data){
+                console.log(data.data);
+            },
+            error: function(data){
+                console.log("error：" + data.data);
+            }
+
+        })
+	}
+
+</script>
+</html>

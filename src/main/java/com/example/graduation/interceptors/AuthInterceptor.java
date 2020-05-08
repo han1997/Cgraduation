@@ -6,6 +6,7 @@ import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.User;
 import com.example.graduation.sys.service.IUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -21,7 +22,7 @@ import java.io.PrintWriter;
  * @date: 2020/5/5 21:56
  * @desc: 这是描述
  **/
-
+@Slf4j
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Autowired
@@ -29,9 +30,11 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("---------reqUrl:----"+request.getRequestURL());
 //        请求跨域
-//        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+        // 允许携带 用户认证凭据（也就是允许客户端发送的请求携带Cookie）
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
@@ -46,6 +49,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 //                方法需要登录
                 HttpSession session = request.getSession();
                 User user = (User) session.getAttribute("user");
+                log.info("拦截器--sessionid-->" + session.getId());
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json;charset=UTF-8");
                 PrintWriter pw = response.getWriter();

@@ -101,6 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //                写session
                 HttpSession session = request.getSession();
                 session.setAttribute("user", userFromDb);
+                log.info("login_sessionid" + session.getId());
 //                写cookie
                 CookieUtil.setCookie(request,response,"session",session.getId(),60,true);
 
@@ -119,8 +120,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public AjaxVoResult logout(HttpServletRequest request,HttpServletResponse response) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        log.info(user.toString() + "请求登出");
         if (user != null) {
+            log.info(user.getUserNo()+"请求登出");
 //            session保存有user信息，清除session，cookie信息
             session.invalidate();
             CookieUtil.deleteCookie(request,response,"session");
@@ -135,9 +136,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 return new AjaxVoResult(StatusCode.ADMIN_USER_NOT_FOUND.getCode(), StatusCode.ADMIN_USER_NOT_FOUND.getMessage(), null);
             }
             return new AjaxVoResult(StatusCode.USER_LOGOUT_SUCCESS.getCode(), StatusCode.USER_LOGOUT_SUCCESS.getMessage(), null);
-        }
+        }else {
 //        session没有user信息，用户未登录
-        return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
+            return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
+        }
     }
 
     @Override

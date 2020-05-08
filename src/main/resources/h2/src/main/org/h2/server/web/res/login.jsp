@@ -18,7 +18,7 @@ Initial Developer: H2 Group
 <body style="margin: 20px">
     <form name="login" method="post" action="login.do?jsessionid=${sessionId}" id="login">
     <p>                    <select name="language" size="1"
-                        onchange="javascript:document.location='index.do?jsessionid=${sessionId}&amp;language='+login.language.value;"
+                        onchange="javascript:document.location='templates.index.do?jsessionid=${sessionId}&amp;language='+login.language.value;"
                     >
                     ${languageCombo}
                     </select>
@@ -39,7 +39,7 @@ Initial Developer: H2 Group
                 <td class="login">
                     <select name="setting" size="1"
                         style="width:300px"
-                        onchange="javascript:document.location='index.do?jsessionid=${sessionId}&amp;setting='+login.setting.value;"
+                        onchange="javascript:document.location='templates.index.do?jsessionid=${sessionId}&amp;setting='+login.setting.value;"
                     >
                     ${settingsList}
                     </select>

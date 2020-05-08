@@ -37,3 +37,7 @@ log/
 **/*.log
 ### mac ###
 .DS_Store
+
+####  xls ###
+*.xls*
+**/*.xls*

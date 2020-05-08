@@ -104,6 +104,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //                返回user信息--去除隐私信息
                 userFromDb.setUserId(null);
                 userFromDb.setUserPsd("******");
+                log.info(userFromDb.toString() + "登录");
                 return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), userFromDb);
             }
             return new AjaxVoResult(StatusCode.ADMIN_USER_WRONG_PASSWORD.getCode(), StatusCode.ADMIN_USER_WRONG_PASSWORD.getMessage(), null);
@@ -115,6 +116,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public AjaxVoResult logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        log.info(user.toString() + "请求登出");
         if (user != null) {
 //            session保存有user信息，清除session，cookie信息
             session.setMaxInactiveInterval(0);
@@ -127,8 +129,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 updateById(userFromdb);
             } else {
                 return new AjaxVoResult(StatusCode.ADMIN_USER_NOT_FOUND.getCode(), StatusCode.ADMIN_USER_NOT_FOUND.getMessage(), null);
-
             }
+            return new AjaxVoResult(StatusCode.USER_LOGOUT_SUCCESS.getCode(), StatusCode.USER_LOGOUT_SUCCESS.getMessage(), null);
         }
 //        session没有user信息，用户未登录
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

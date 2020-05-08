@@ -71,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     @Transactional
     public AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response) {
-        final QueryWrapper<User> qw = new QueryWrapper<>();
+        QueryWrapper<User> qw = new QueryWrapper<>();
 //        使用userno + userrole验证用户
         qw.eq("user_no", user.getUserNo());
         qw.eq("user_role", user.getUserRole());
@@ -101,6 +101,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //                写session
                 HttpSession session = request.getSession();
                 session.setAttribute("user", userFromDb);
+//                写cookie
+                CookieUtil.setCookie(request,response,"session",session.getId(),60,true);
+
 //                返回user信息--去除隐私信息
                 userFromDb.setUserId(null);
                 userFromDb.setUserPsd("******");
@@ -113,13 +116,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public AjaxVoResult logout(HttpServletRequest request) {
+    public AjaxVoResult logout(HttpServletRequest request,HttpServletResponse response) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         log.info(user.toString() + "请求登出");
         if (user != null) {
 //            session保存有user信息，清除session，cookie信息
-            session.setMaxInactiveInterval(0);
+            session.invalidate();
+            CookieUtil.deleteCookie(request,response,"session");
 //            写数据库登出时间
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_no", user.getUserNo());
@@ -138,6 +142,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public AjaxVoResult addUser(User user) {
+        //        设置默认密码
+        user.setUserPsd(user.getUserNo());
 //        默认userno不为空，先查询该userno是否已被注册
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_no", user.getUserNo());

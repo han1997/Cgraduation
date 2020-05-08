@@ -28,10 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -79,8 +77,6 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
-        //        设置默认密码
-        user.setUserPsd(user.getUserNo());
         return userService.addUser(user);
 
     }
@@ -158,7 +154,7 @@ public class UserController {
     @ApiOperation("用户登录接口")
     @PostMapping("/login")
     public AjaxVoResult login(User user, HttpServletRequest request, HttpServletResponse response) {
-        if (StringUtils.isBlank(user.getUserRole())){
+        if (StringUtils.isBlank(user.getUserRole())) {
 //            如果没有选用户角色，默认学生
             user.setUserRole("3");
         }
@@ -167,8 +163,8 @@ public class UserController {
 
     @ApiOperation("用户注销接口")
     @RequestMapping("/logout")
-    public AjaxVoResult logout(HttpServletRequest request) {
-        return userService.logout(request);
+    public AjaxVoResult logout(HttpServletRequest request,HttpServletResponse response) {
+        return userService.logout(request,response);
     }
 
     @ApiOperation("管理员Excel导入接口")
@@ -207,15 +203,89 @@ public class UserController {
         List<User> users = userService.list();
         String fileName = users.get(0).getClass().getSimpleName() + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".xls";
         File tem = new File(fileName);
-        //			转化excel
-        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("用户表", "1"),
-                User.class, users);
-        FileOutputStream out = new FileOutputStream(tem);
-        workbook.write(out);
-        workbook.close();
-        workbook = null;
-        out.close();
+        try (FileOutputStream out = new FileOutputStream(tem);
+        ) {
+            //			转化excel
+            Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("用户表", "1"),
+                    User.class, users);
+            workbook.write(out);
+            workbook.close();
+            workbook = null;
+//            写入响应
+            download(tem,fileName,request,response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param file
+     *            要下载的文件
+     * @param filename
+     *            要下载的文件名
+     * @param request
+     *            HttpServletRequest
+     * @param response
+     *            HttpServletResponse
+     */
+    public void download(File file, String filename, HttpServletRequest request, HttpServletResponse response){
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setContentType(request.getSession().getServletContext().getMimeType(filename));
+            bos = new BufferedOutputStream(response.getOutputStream());
+            if (file.exists()) {
+                long fileLength = file.length();
+                // fileName = java.net.URLEncoder.encode(fileName, "utf-8");
+                String agent = request.getHeader("user-agent");
+                if (agent.contains("MSIE")) {
+                    // IE浏览器
+                    filename = URLEncoder.encode(filename, "utf-8");
+                    filename = filename.replace("+", " ");
+                } else {
+                    String type = response.getHeader("use-down-type");
+                    if (type != null && agent.contains("Firefox")) {
+                        // 火狐浏览器
+                        filename = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+                    } else {
+                        // 其它浏览器
+                        filename = URLEncoder.encode(filename, "utf-8");
+                    }
+                }
+
+                response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
+                response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+                response.setHeader("Content-Length", String.valueOf(fileLength));
+                bis = new BufferedInputStream(new FileInputStream(file));
+                byte[] buff = new byte[102400];
+                int bytesRead;
+                while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                    bos.write(buff, 0, bytesRead);
+                }
+            } else {
+                response.setHeader("Content-Disposition",
+                        "attachment; filename=" + java.net.URLEncoder.encode("文件不存在.txt", "utf-8"));
+                bos.write("文件已不存在".getBytes());
+            }
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            try {
+                if (bis != null)
+                    bis.close();
+                if (bos != null)
+                    bos.close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+
+        }
     }
 
 }

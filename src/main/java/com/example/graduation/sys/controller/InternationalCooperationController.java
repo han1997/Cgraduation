@@ -9,7 +9,9 @@ import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.InternationalCooperation;
 import com.example.graduation.sys.service.IInternationalCooperationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,8 +31,8 @@ public class InternationalCooperationController {
 
     @RequestMapping("/list")
     public AjaxVoResult list(InternationalCooperation internationalCooperation) {
-        Wrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
-        List<InternationalCooperation> internationalCooperations = internationalCooperationService.list();
+        QueryWrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
+        List<InternationalCooperation> internationalCooperations = internationalCooperationService.list(qw);
         if (internationalCooperations.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), internationalCooperations);
         }

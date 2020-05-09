@@ -1,7 +1,6 @@
 package com.example.graduation.sys.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
@@ -9,7 +8,9 @@ import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.INewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,8 +30,9 @@ public class NewsController {
 
     @RequestMapping("/list")
     public AjaxVoResult list(News news) {
-        Wrapper<News> qw = new QueryWrapper<>(news);
-        List<News> newss = newsService.list();
+        QueryWrapper<News> qw = new QueryWrapper<>(news);
+        qw.orderByDesc("release_time");
+        List<News> newss = newsService.list(qw);
         if (newss.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), newss);
         }
@@ -98,6 +100,7 @@ public class NewsController {
          * @time: 2020/5/5 5:18 下午
          */
         QueryWrapper<News> qw = new QueryWrapper<>(news);
+        qw.orderByDesc("release_time");
         if (page == null) {
             page = new Page<>(1, 11);
         }

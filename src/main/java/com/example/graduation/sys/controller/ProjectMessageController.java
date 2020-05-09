@@ -11,7 +11,6 @@ import com.example.graduation.sys.service.IProjectMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,8 +31,8 @@ public class ProjectMessageController {
 
     @RequestMapping("/list")
     public AjaxVoResult list(ProjectMessage projectMessage) {
-        Wrapper<ProjectMessage> qw = new QueryWrapper<>(projectMessage);
-        List<ProjectMessage> projectMessages = projectMessageService.list();
+        QueryWrapper<ProjectMessage> qw = new QueryWrapper<>(projectMessage);
+        List<ProjectMessage> projectMessages = projectMessageService.list(qw);
         if (projectMessages.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMessages);
         }

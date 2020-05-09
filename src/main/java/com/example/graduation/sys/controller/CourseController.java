@@ -9,7 +9,9 @@ import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.Course;
 import com.example.graduation.sys.service.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,8 +31,9 @@ public class CourseController {
 
     @RequestMapping("/list")
     public AjaxVoResult list(Course course) {
-        Wrapper<Course> qw = new QueryWrapper<>(course);
-        List<Course> courses = courseService.list();
+        QueryWrapper<Course> qw = new QueryWrapper<>(course);
+        qw.orderByDesc("course_time");
+        List<Course> courses = courseService.list(qw);
         if (courses.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), courses);
         }
@@ -98,6 +101,7 @@ public class CourseController {
          * @time: 2020/5/5 5:18 下午
          */
         QueryWrapper<Course> qw = new QueryWrapper<>(course);
+        qw.orderByDesc("course_time");
         if (page == null) {
             page = new Page<>(1, 11);
         }

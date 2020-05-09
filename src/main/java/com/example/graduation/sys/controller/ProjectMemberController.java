@@ -11,7 +11,9 @@ import com.example.graduation.sys.service.IProjectMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -33,8 +35,8 @@ public class ProjectMemberController {
     @RequestMapping("/list")
     @ApiOperation("管理员查询所有项目成员接口")
     public AjaxVoResult list(ProjectMember projectMember) {
-        Wrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
-        List<ProjectMember> projectMembers = projectMemberService.list();
+        QueryWrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
+        List<ProjectMember> projectMembers = projectMemberService.list(qw);
         if (projectMembers.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMembers);
         }

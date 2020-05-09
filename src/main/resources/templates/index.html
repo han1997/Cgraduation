@@ -56,6 +56,10 @@
             url: "http://127.0.0.1:8080/sys/user/get",
             method: "POST",
             data: userName,
+
+            xhrFields: {
+                withCredentials: true
+            },
             success: function(data){
                 console.log(data);
             },

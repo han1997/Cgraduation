@@ -102,8 +102,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 HttpSession session = request.getSession();
                 session.setAttribute("user", userFromDb);
                 log.info("login_sessionid" + session.getId());
-//                写cookie
-                CookieUtil.setCookie(request,response,"session",session.getId(),60,true);
 
 //                返回user信息--去除隐私信息
                 userFromDb.setUserId(null);

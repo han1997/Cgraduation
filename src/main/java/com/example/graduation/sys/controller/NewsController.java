@@ -11,6 +11,8 @@ import com.example.graduation.sys.service.INewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 新闻、通知 前端控制器
@@ -25,17 +27,11 @@ public class NewsController {
     @Autowired
     INewsService newsService;
 
-    @RequestMapping("/list/{currPage}/{size}")
-    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, News news) {
-        final Page<News> page = new Page<News>(currPage, size);
+    @RequestMapping("/list")
+    public AjaxVoResult list(News news) {
         Wrapper<News> qw = new QueryWrapper<>(news);
-        Page newss = null;
-        if (qw == null) {
-            newss = newsService.page(page);
-        } else {
-            newss = newsService.page(page, qw);
-        }
-        if (newss.getRecords().size() > 0) {
+        List<News> newss = newsService.list();
+        if (newss.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), newss);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
@@ -103,8 +99,9 @@ public class NewsController {
          */
         QueryWrapper<News> qw = new QueryWrapper<>(news);
         if (page == null) {
-            Page<News> newsPage = new Page<>(1, 5);
+            page = new Page<>(1, 11);
         }
+        page.setSize(11L);
         Page page1 = newsService.page(page, qw);
         if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);

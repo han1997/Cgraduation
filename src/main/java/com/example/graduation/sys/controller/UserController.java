@@ -51,18 +51,12 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-    @ApiOperation("管理员分页查询所有用户接口")
-    @RequestMapping("/list/{currPage}/{size}")
-    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, User user) {
-        final Page<User> page = new Page<User>(currPage, size);
+    @ApiOperation("管理员查询所有用户接口")
+    @RequestMapping("/list")
+    public AjaxVoResult list(User user) {
         Wrapper<User> qw = new QueryWrapper<>(user);
-        Page users = null;
-        if (qw == null) {
-            users = userService.page(page);
-        } else {
-            users = userService.page(page, qw);
-        }
-        if (users.getRecords().size() > 0) {
+        List<User> users = userService.list();
+        if (users.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), users);
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
@@ -119,9 +113,8 @@ public class UserController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
-    @ApiOperation("教师以上权限获取单个用户信息接口")
+    @ApiOperation("获取前11个用户信息接口")
     @PostMapping("/get")
-    @LoginRequire(role = 1)
     public AjaxVoResult get(Page page, User user) {
         /**
          *
@@ -133,8 +126,9 @@ public class UserController {
          */
         QueryWrapper<User> qw = new QueryWrapper<>(user);
         if (page == null) {
-            page = new Page<>(1, 5);
+            page = new Page<>(1, 11);
         }
+        page.setSize(11L);
         Page page1 = userService.page(page, qw);
         if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);

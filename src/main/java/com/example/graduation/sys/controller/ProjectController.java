@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * <p>
  * 项目信息表 前端控制器
@@ -28,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@Api(tags = "用户相关接口", description = "提供用户相关的 Rest API")
+@Api(tags = "项目相关接口", description = "提供用户相关的 Rest API")
 @RequestMapping("/sys/project")
 public class ProjectController {
     @Autowired
@@ -37,17 +39,11 @@ public class ProjectController {
     IProjectService projectService;
 
     @ApiOperation("管理员分页查询所有项目接口")
-    @RequestMapping("/list/{currPage}/{size}")
-    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, Project project) {
-        final Page<Project> page = new Page<Project>(currPage, size);
+    @RequestMapping("/list")
+    public AjaxVoResult list(Project project) {
         Wrapper<Project> qw = new QueryWrapper<>(project);
-        Page projects = null;
-        if (qw == null) {
-            projects = projectService.page(page);
-        } else {
-            projects = projectService.page(page, qw);
-        }
-        if (projects.getRecords().size() > 0) {
+        List<Project> projects = projectService.list();
+        if (projects.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projects);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
@@ -115,7 +111,7 @@ public class ProjectController {
          */
         QueryWrapper<Project> qw = new QueryWrapper<>(project);
         if (page == null) {
-            page = new Page<>(1, 5);
+            page = new Page<>(1, 11);
         }
         Page page1 = projectService.page(page, qw);
         if (page1.getTotal() > 0) {

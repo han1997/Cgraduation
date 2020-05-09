@@ -11,6 +11,8 @@ import com.example.graduation.sys.service.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 课程表 前端控制器
@@ -25,18 +27,12 @@ public class CourseController {
     @Autowired
     ICourseService courseService;
 
-    @RequestMapping("/list/{currPage}/{size}")
-    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, Course course) {
-        final Page<Course> page = new Page<Course>(currPage, size);
+    @RequestMapping("/list")
+    public AjaxVoResult list(Course course) {
         Wrapper<Course> qw = new QueryWrapper<>(course);
-        Page users = null;
-        if (qw == null){
-            users = courseService.page(page);
-        }else {
-            users = courseService.page(page,qw);
-        }
-        if (users.getRecords().size() > 0) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), users);
+        List<Course> courses = courseService.list();
+        if (courses.size() > 0) {
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), courses);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
     }
@@ -66,8 +62,8 @@ public class CourseController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        Course user = new Course();
-        user.setCourseId(courseId);
+        Course course = new Course();
+        course.setCourseId(courseId);
         boolean b = courseService.removeById(courseId);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
@@ -90,8 +86,9 @@ public class CourseController {
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
+
     @PostMapping("/get")
-    public AjaxVoResult get(Page page,Course course){
+    public AjaxVoResult get(Page page, Course course) {
         /**
          *
          * @description: 条件查询用户
@@ -101,11 +98,12 @@ public class CourseController {
          * @time: 2020/5/5 5:18 下午
          */
         QueryWrapper<Course> qw = new QueryWrapper<>(course);
-        if (page == null){
-            Page<Course> userPage = new Page<>(1,5);
+        if (page == null) {
+            page = new Page<>(1, 11);
         }
+        page.setSize(11L);
         Page page1 = courseService.page(page, qw);
-        if (page1.getTotal() > 0){
+        if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

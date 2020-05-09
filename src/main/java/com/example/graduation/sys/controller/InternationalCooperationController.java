@@ -11,6 +11,8 @@ import com.example.graduation.sys.service.IInternationalCooperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 国际合作 前端控制器
@@ -25,17 +27,11 @@ public class InternationalCooperationController {
     @Autowired
     IInternationalCooperationService internationalCooperationService;
 
-    @RequestMapping("/list/{currPage}/{size}")
-    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, InternationalCooperation internationalCooperation) {
-        final Page<InternationalCooperation> page = new Page<InternationalCooperation>(currPage, size);
+    @RequestMapping("/list")
+    public AjaxVoResult list(InternationalCooperation internationalCooperation) {
         Wrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
-        Page internationalCooperations = null;
-        if (qw == null) {
-            internationalCooperations = internationalCooperationService.page(page);
-        } else {
-            internationalCooperations = internationalCooperationService.page(page, qw);
-        }
-        if (internationalCooperations.getRecords().size() > 0) {
+        List<InternationalCooperation> internationalCooperations = internationalCooperationService.list();
+        if (internationalCooperations.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), internationalCooperations);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
@@ -103,8 +99,9 @@ public class InternationalCooperationController {
          */
         QueryWrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
         if (page == null) {
-            Page<InternationalCooperation> internationalCooperationPage = new Page<>(1, 5);
+            page = new Page<>(1, 11);
         }
+        page.setSize(11L);
         Page page1 = internationalCooperationService.page(page, qw);
         if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);

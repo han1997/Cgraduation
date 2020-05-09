@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 项目成员表 前端控制器
@@ -28,18 +30,12 @@ public class ProjectMemberController {
     @Autowired
     IProjectMemberService projectMemberService;
 
-    @RequestMapping("/list/{currPage}/{size}")
-    @ApiOperation("管理员分页查询所有项目成员接口")
-    public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, ProjectMember projectMember) {
-        final Page<ProjectMember> page = new Page<ProjectMember>(currPage, size);
+    @RequestMapping("/list")
+    @ApiOperation("管理员查询所有项目成员接口")
+    public AjaxVoResult list(ProjectMember projectMember) {
         Wrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
-        Page projectMembers = null;
-        if (qw == null) {
-            projectMembers = projectMemberService.page(page);
-        } else {
-            projectMembers = projectMemberService.page(page, qw);
-        }
-        if (projectMembers.getRecords().size() > 0) {
+        List<ProjectMember> projectMembers = projectMemberService.list();
+        if (projectMembers.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMembers);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
@@ -107,8 +103,9 @@ public class ProjectMemberController {
          */
         QueryWrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
         if (page == null) {
-            Page<ProjectMember> projectMemberPage = new Page<>(1, 5);
+            page = new Page<>(1, 11);
         }
+        page.setSize(11L);
         Page page1 = projectMemberService.page(page, qw);
         if (page1.getTotal() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);

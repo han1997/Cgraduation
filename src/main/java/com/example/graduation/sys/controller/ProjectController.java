@@ -7,15 +7,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.Project;
-import com.example.graduation.sys.entity.User;
 import com.example.graduation.sys.service.IProjectService;
 import com.example.graduation.sys.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -40,14 +41,14 @@ public class ProjectController {
     public AjaxVoResult list(@PathVariable int currPage, @PathVariable int size, Project project) {
         final Page<Project> page = new Page<Project>(currPage, size);
         Wrapper<Project> qw = new QueryWrapper<>(project);
-        Page users = null;
+        Page projects = null;
         if (qw == null) {
-            users = projectService.page(page);
+            projects = projectService.page(page);
         } else {
-            users = projectService.page(page, qw);
+            projects = projectService.page(page, qw);
         }
-        if (users.getRecords().size() > 0) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), users);
+        if (projects.getRecords().size() > 0) {
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projects);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
     }
@@ -114,7 +115,7 @@ public class ProjectController {
          */
         QueryWrapper<Project> qw = new QueryWrapper<>(project);
         if (page == null) {
-            Page<Project> userPage = new Page<>(1, 5);
+            page = new Page<>(1, 5);
         }
         Page page1 = projectService.page(page, qw);
         if (page1.getTotal() > 0) {

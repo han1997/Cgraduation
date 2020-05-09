@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -132,7 +133,7 @@ public class UserController {
          */
         QueryWrapper<User> qw = new QueryWrapper<>(user);
         if (page == null) {
-            Page<User> userPage = new Page<>(1, 5);
+            page = new Page<>(1, 5);
         }
         Page page1 = userService.page(page, qw);
         if (page1.getTotal() > 0) {
@@ -163,8 +164,8 @@ public class UserController {
 
     @ApiOperation("用户注销接口")
     @RequestMapping("/logout")
-    public AjaxVoResult logout(HttpServletRequest request,HttpServletResponse response) {
-        return userService.logout(request,response);
+    public AjaxVoResult logout(HttpServletRequest request, HttpServletResponse response) {
+        return userService.logout(request, response);
     }
 
     @ApiOperation("管理员Excel导入接口")
@@ -188,10 +189,14 @@ public class UserController {
         params.setTitleRows(1);
         params.setHeadRows(1);
         List<User> list = ExcelImportUtil.importExcel(uploadExcel, User.class, params);
+        ArrayList<AjaxVoResult> ajaxVoResults = new ArrayList<>();
         if (!CollectionUtils.isEmpty(list)) {
-            list.forEach(user -> userService.addUser(user));
+            list.forEach(user -> {
+                AjaxVoResult ajaxVoResult = userService.addUser(user);
+                ajaxVoResults.add(ajaxVoResult);
+            });
             uploadExcel.delete();
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), null);
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), ajaxVoResults);
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "Excel导入出错");
 
@@ -212,7 +217,7 @@ public class UserController {
             workbook.close();
             workbook = null;
 //            写入响应
-            download(tem,fileName,request,response);
+            download(tem, fileName, request, response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -222,16 +227,12 @@ public class UserController {
     /**
      * 下载文件
      *
-     * @param file
-     *            要下载的文件
-     * @param filename
-     *            要下载的文件名
-     * @param request
-     *            HttpServletRequest
-     * @param response
-     *            HttpServletResponse
+     * @param file     要下载的文件
+     * @param filename 要下载的文件名
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      */
-    public void download(File file, String filename, HttpServletRequest request, HttpServletResponse response){
+    public void download(File file, String filename, HttpServletRequest request, HttpServletResponse response) {
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
         try {

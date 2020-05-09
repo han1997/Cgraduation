@@ -39,6 +39,11 @@ public class Project implements Serializable {
     private String projectOwner;
 
     /**
+     * 项目密码
+     */
+    private String projectPsd;
+
+    /**
      * 项目描述
      */
     private String projectDesc;

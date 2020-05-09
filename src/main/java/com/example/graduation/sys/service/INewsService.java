@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface INewsService extends IService<News> {
 
+    boolean add(News news);
 }

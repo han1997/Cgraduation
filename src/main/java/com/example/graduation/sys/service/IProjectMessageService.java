@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IProjectMessageService extends IService<ProjectMessage> {
 
+    boolean add(ProjectMessage projectMessage);
 }

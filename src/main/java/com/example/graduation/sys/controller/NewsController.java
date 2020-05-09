@@ -46,7 +46,7 @@ public class NewsController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
-        boolean b = newsService.save(news);
+        boolean b = newsService.add(news);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
         }

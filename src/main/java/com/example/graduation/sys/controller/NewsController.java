@@ -49,7 +49,7 @@ public class NewsController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(News news,@RequestParam("file") MultipartFile file) {
+    public AjaxVoResult add(News news,MultipartFile file) {
         /**
          *
          * @description: 新增用户

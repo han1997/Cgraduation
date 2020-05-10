@@ -49,7 +49,7 @@ public class NewsController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(News news, MultipartFile file) {
+    public AjaxVoResult add(News news,@RequestParam("file") MultipartFile file) {
         /**
          *
          * @description: 新增用户
@@ -64,7 +64,7 @@ public class NewsController {
             if (ajaxVoResult.getStatusCode() == 200) {
                 String filePath = (String) ajaxVoResult.getDatas();
 //                将\转为/保存数据库
-                String[] split = filePath.split("\\\\" );
+                String[] split = filePath.split("/|\\\\");
                 filePath = split[0] + "/" + split[1] + "/" + split[2];
                 enclosure = "http://35.241.68.51:8080/sys/news/downloadEnclosure?filePath=" + filePath;
             }

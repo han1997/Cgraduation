@@ -20,6 +20,7 @@ public enum StatusCode {
     ROLE_UPDATE_FAILED(10006, "角色更新失败"),
     ROLE_INSERT_FAILED(10007, "角色添加失败"),
     ROLE_DELETE_FAILED(10008, "角色删除失败"),
+    RESOURCE_IS_EXISTS(10009,"资源已存在"),
     ADMIN_USER_NOT_FOUND(10100, "账户不存在"),
     ADMIN_USER_WRONG_PASSWORD(10101, "登录密码错误"),
     ADMIN_USER_INSERT_FAILED(10102, "创建用户失败"),

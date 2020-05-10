@@ -9,10 +9,12 @@ import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.InternationalCooperation;
 import com.example.graduation.sys.service.IInternationalCooperationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,8 +57,9 @@ public class InternationalCooperationController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @Transactional
     @PostMapping("/delete")
-    public AjaxVoResult delete(int internationalCooperationId) {
+    public AjaxVoResult delete(int[] internationalCooperationIds) {
         /**
          *
          * @description: 通过internationalCooperationId删除用户
@@ -64,13 +67,17 @@ public class InternationalCooperationController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        InternationalCooperation internationalCooperation = new InternationalCooperation();
-        internationalCooperation.setIcId(internationalCooperationId);
-        boolean b = internationalCooperationService.removeById(internationalCooperationId);
-        if (b) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        ArrayList<AjaxVoResult> ajaxVoResults = new ArrayList<>();
+        for (int i = 0; i < internationalCooperationIds.length; i++) {
+            int internationalCooperationId = internationalCooperationIds[i];
+            boolean b = internationalCooperationService.removeById(internationalCooperationId);
+            if (b) {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "国际合作Id：" + internationalCooperationId + "已被删除"));
+            } else {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "国际合作Id：" + internationalCooperationId + "删除出错"));
+            }
         }
-        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+        return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), ajaxVoResults);
     }
 
     @PostMapping("/update")

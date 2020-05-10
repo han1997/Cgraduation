@@ -9,6 +9,7 @@ import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.ProjectMessage;
 import com.example.graduation.sys.service.IProjectMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +58,7 @@ public class ProjectMessageController {
     }
 
     @PostMapping("/delete")
+    @Transactional
     public AjaxVoResult delete(int projectMessageId) {
         /**
          *

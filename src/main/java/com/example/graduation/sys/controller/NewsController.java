@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.News;
+import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.INewsService;
 import com.example.graduation.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -77,22 +80,27 @@ public class NewsController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @Transactional
     @PostMapping("/delete")
-    public AjaxVoResult delete(int newsId) {
+    public AjaxVoResult delete(int[] newsIds) {
         /**
          *
-         * @description: 通过newsId删除用户
-         * @param newsId
+         * @description: 通过projectId删除项目
+         * @param projectId
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        News news = new News();
-        news.setNewsId(newsId);
-        boolean b = newsService.removeById(newsId);
-        if (b) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        ArrayList<AjaxVoResult> ajaxVoResults = new ArrayList<>();
+        for (int i = 0; i < newsIds.length; i++) {
+            int newsId = newsIds[i];
+            boolean b = newsService.removeById(newsId);
+            if (b) {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "新闻Id：" + newsId + "已被删除"));
+            } else {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "新闻Id：" + newsId + "删除出错"));
+            }
         }
-        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+        return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), ajaxVoResults);
     }
 
     @PostMapping("/update")

@@ -1,5 +1,6 @@
 package com.example.graduation.sys.service;
 
+import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICourseService extends IService<Course> {
 
+    AjaxVoResult add(Course course);
 }

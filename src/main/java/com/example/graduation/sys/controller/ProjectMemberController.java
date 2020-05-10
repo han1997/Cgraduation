@@ -11,10 +11,12 @@ import com.example.graduation.sys.service.IProjectMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,8 +61,9 @@ public class ProjectMemberController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @Transactional
     @PostMapping("/delete")
-    public AjaxVoResult delete(int projectMemberId) {
+    public AjaxVoResult delete(int[] projectMemberIds) {
         /**
          *
          * @description: 通过projectMemberId删除用户
@@ -68,13 +71,17 @@ public class ProjectMemberController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        ProjectMember projectMember = new ProjectMember();
-        projectMember.setPmId(projectMemberId);
-        boolean b = projectMemberService.removeById(projectMemberId);
-        if (b) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        ArrayList<AjaxVoResult> ajaxVoResults = new ArrayList<>();
+        for (int i = 0; i < projectMemberIds.length; i++) {
+            int projectMemberId = projectMemberIds[i];
+            boolean b = projectMemberService.removeById(projectMemberId);
+            if (b) {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "项目成员Id：" + projectMemberId + "已被删除"));
+            } else {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "项目成员Id：" + projectMemberId + "删除出错"));
+            }
         }
-        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+        return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), ajaxVoResults);
     }
 
     @PostMapping("/update")

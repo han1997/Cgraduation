@@ -7,16 +7,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.Project;
+import com.example.graduation.sys.entity.User;
 import com.example.graduation.sys.service.IProjectService;
 import com.example.graduation.sys.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,8 +67,9 @@ public class ProjectController {
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
 
+    @Transactional
     @PostMapping("/delete")
-    public AjaxVoResult delete(int projectId) {
+    public AjaxVoResult delete(int[] projectIds) {
         /**
          *
          * @description: 通过projectId删除项目
@@ -73,13 +77,17 @@ public class ProjectController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        Project user = new Project();
-        user.setProjectId(projectId);
-        boolean b = projectService.removeById(projectId);
-        if (b) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        ArrayList<AjaxVoResult> ajaxVoResults = new ArrayList<>();
+        for (int i = 0; i < projectIds.length; i++) {
+            int projectId = projectIds[i];
+            boolean b = projectService.removeById(projectId);
+            if (b) {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "项目Id：" + projectId + "已被删除"));
+            } else {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "项目Id：" + projectId + "删除出错"));
+            }
         }
-        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+        return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), ajaxVoResults);
     }
 
     @PostMapping("/update")

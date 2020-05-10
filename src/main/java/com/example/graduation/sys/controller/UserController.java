@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -79,7 +80,8 @@ public class UserController {
 
     @ApiOperation("管理员删除用户接口")
     @PostMapping("/delete")
-    public AjaxVoResult delete(int userId) {
+    @Transactional
+    public AjaxVoResult delete(int[] userIds) {
         /**
          *
          * @description: 通过userId删除用户
@@ -87,14 +89,19 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        User user = new User();
-        user.setUserId(userId);
-        boolean b = userService.removeById(userId);
-        if (b) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
+        ArrayList<AjaxVoResult> ajaxVoResults = new ArrayList<>();
+        for (int i = 0; i < userIds.length; i++) {
+            int userId = userIds[i];
+            boolean b = userService.removeById(userId);
+            if (b) {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "用户Id：" + userId + "已被删除"));
+            } else {
+                ajaxVoResults.add(new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "用户Id：" + userId + "删除出错"));
+            }
         }
-        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+        return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), ajaxVoResults);
     }
+
 
     @ApiOperation("更新用户接口")
     @PostMapping("/update")
@@ -169,7 +176,7 @@ public class UserController {
 //        判断上传文件格式
         String originalFilename = file.getOriginalFilename();
         String[] split = originalFilename.split("\\.");
-        if (!"xls".equals(split[split.length -1]) || !"xlsx".equals(split[split.length -1])){
+        if (!"xls".equals(split[split.length - 1]) || !"xlsx".equals(split[split.length - 1])) {
             return new AjaxVoResult(StatusCode.RESOURCE_TYPE_ERROR.getCode(), StatusCode.RESOURCE_TYPE_ERROR.getMessage(), "Excel导入出错");
         }
 
@@ -227,7 +234,6 @@ public class UserController {
         }
         return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
     }
-
 
 
 }

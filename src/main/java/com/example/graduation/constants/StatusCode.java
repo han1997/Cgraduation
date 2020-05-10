@@ -16,6 +16,7 @@ public enum StatusCode {
     RESOURCE_DELETE_FAILED(10003, "资源删除失败"),
     RESOURCE_NOT_MESSAGE_EXIT(10004, "资源信息不存在"),
     RESOURCE_IMPORT_ERROR(10005, "资源导入失败"),
+    RESOURCE_TYPE_ERROR(10009,"文件类型错误"),
     ROLE_UPDATE_FAILED(10006, "角色更新失败"),
     ROLE_INSERT_FAILED(10007, "角色添加失败"),
     ROLE_DELETE_FAILED(10008, "角色删除失败"),

@@ -9,9 +9,13 @@
 
 <body>
 <!--    <form action="http://35.241.68.51:8080/sys/user/importExcel" method="POST" enctype="multipart/form-data">-->
+    <form action="http://127.0.0.1:8080/sys/news/add" method="POST" enctype="multipart/form-data">
+        <input type="text" name="newsTitle">
+        <input type="text" name="newsDesc">
+        <input type="text" name="newsType">
         <input type="file" name="file" id="file">
-        <button type="submit" onclick="uploadExcel()">上传</button>
-<!--    </form>-->
+        <button type="submit">上传</button>
+    </form>
     <!-- <form action="http://127.0.0.1:8080/sys/user/login" method="POST"> -->
         <input type="text" name="userNo" id="userNo">
         <input type="password" name="userPsd" id="userPsd">
@@ -25,9 +29,6 @@
 </body>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
 <script>
-    function uploadExcel() {
-        $(file)
-    }
 	function login(){
         var userNo = $("input[name = userNo]").val();
 		var userPsd = $("input[name = userPsd]").val();

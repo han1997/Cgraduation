@@ -34,6 +34,7 @@ public class ProjectMessageController {
         QueryWrapper<ProjectMessage> qw = new QueryWrapper<>(projectMessage);
         List<ProjectMessage> projectMessages = projectMessageService.list(qw);
         if (projectMessages.size() > 0) {
+            projectMessages.forEach(projectMessage1 -> projectMessage1.setPublishTime(projectMessage1.getPublishTime().substring(0,10)));
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMessages);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
@@ -106,6 +107,8 @@ public class ProjectMessageController {
         page.setSize(11L);
         Page page1 = projectMessageService.page(page, qw);
         if (page1.getTotal() > 0) {
+            List<ProjectMessage> records = page1.getRecords();
+            records.forEach(projectMessage1 -> projectMessage1.setPublishTime(projectMessage1.getPublishTime().substring(0,10)));
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

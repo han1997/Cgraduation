@@ -4,6 +4,7 @@ import com.example.graduation.sys.entity.ProjectMessage;
 import com.example.graduation.sys.mapper.ProjectMessageMapper;
 import com.example.graduation.sys.service.IProjectMessageService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.graduation.utils.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class ProjectMessageServiceImpl extends ServiceImpl<ProjectMessageMapper,
 
     @Override
     public boolean add(ProjectMessage projectMessage) {
-        projectMessage.setPublishTime(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        projectMessage.setPublishTime(TimeUtils.getDateTime());
         int insert = projectMessageMapper.insert(projectMessage);
         if (insert == 1){
             return true;

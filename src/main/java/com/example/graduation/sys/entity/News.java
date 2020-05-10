@@ -53,5 +53,10 @@ public class News implements Serializable {
      */
     private String releaseTime;
 
+    /**
+     * 附件
+     */
+    private String enclosure;
+
 
 }

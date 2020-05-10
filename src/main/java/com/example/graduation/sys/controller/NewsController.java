@@ -7,11 +7,17 @@ import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.INewsService;
+import com.example.graduation.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -33,6 +39,9 @@ public class NewsController {
         QueryWrapper<News> qw = new QueryWrapper<>(news);
         qw.orderByDesc("release_time");
         List<News> newss = newsService.list(qw);
+        newss.forEach(news1 -> {
+            news1.setReleaseTime(news1.getReleaseTime().substring(0, 10));
+        });
         if (newss.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), newss);
         }
@@ -40,7 +49,7 @@ public class NewsController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(News news) {
+    public AjaxVoResult add(News news, MultipartFile file) {
         /**
          *
          * @description: 新增用户
@@ -48,6 +57,19 @@ public class NewsController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
+        String enclosure = "";
+        if (file != null && file.getSize() > 0) {
+//        如果上传了附件
+            AjaxVoResult ajaxVoResult = FileUtils.saveUploadFile(file);
+            if (ajaxVoResult.getStatusCode() == 200) {
+                String filePath = (String) ajaxVoResult.getDatas();
+//                将\转为/保存数据库
+                String[] split = filePath.split("\\\\" );
+                filePath = split[0] + "/" + split[1] + "/" + split[2];
+                enclosure = "http://35.241.68.51:8080/sys/news/downloadEnclosure?filePath=" + filePath;
+            }
+        }
+        news.setEnclosure(enclosure);
         boolean b = newsService.add(news);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
@@ -106,10 +128,32 @@ public class NewsController {
         }
         page.setSize(11L);
         Page page1 = newsService.page(page, qw);
+        List<News> records = page1.getRecords();
         if (page1.getTotal() > 0) {
+            records.forEach(news1 -> {
+                news1.setReleaseTime(news1.getReleaseTime().substring(0, 10));
+            });
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
+    }
+
+    @RequestMapping("/downloadEnclosure")
+    public AjaxVoResult downloadEnclosure(HttpServletRequest request, HttpServletResponse response, String filePath) {
+        String[] split = filePath.split("/");
+        String fileName = split[2];
+        File file = new File(filePath);
+        if (file.exists()) {
+//            文件存在
+            FileUtils.download(file, fileName, request, response);
+//            还加return AjaxVoResult 会发生Cannot call sendError() after the response has been committed 错误，因为download方法里面已经将要返回的数据写入response里面了
+//            所以return null;
+//            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "下载成功");
+            return null;
+        } else {
+            return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), "附件不存在");
+
+        }
     }
 
 }

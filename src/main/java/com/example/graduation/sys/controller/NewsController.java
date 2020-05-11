@@ -5,25 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
-import com.example.graduation.sys.dto.NewsDTO;
-import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.INewsService;
-import com.example.graduation.utils.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -44,28 +33,12 @@ public class NewsController {
         QueryWrapper<News> qw = new QueryWrapper<>(news);
         qw.orderByDesc("release_time");
         List<News> newss = newsService.list(qw);
-        List<NewsDTO> newsDTOS = new ArrayList<>();
-        newss.forEach(news1 -> {
-            news1.setReleaseTime(news1.getReleaseTime().substring(0, 10));
-//            封装DTO传递给前端
-            NewsDTO newsDTO = new NewsDTO();
-            BeanUtils.copyProperties(news1,newsDTO);
-//            获取文件名
-            String enclosure = news1.getEnclosure();
-//            http://35.241.68.51:8080/download?filePath=~/enclosure/20200511071926-test.xls
-            if (StringUtils.isNotBlank(enclosure)){
-//                附件信息不为空
-                String[] split = enclosure.split("-");
-                String fileName = "";
-                for (int i = 1; i < split.length; i++) {
-                    fileName += split[i];
-                }
-                newsDTO.setFileName(fileName);
-            }
-            newsDTOS.add(newsDTO);
-        });
-        if (newsDTOS.size() > 0) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), newsDTOS);
+
+        if (newss.size() > 0) {
+            newss.forEach(news1 -> {
+                news1.setReleaseTime(news1.getReleaseTime().substring(0, 10));
+            });
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), newss);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
     }

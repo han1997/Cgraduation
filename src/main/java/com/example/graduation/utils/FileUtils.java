@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author: huiyuan
@@ -19,7 +21,7 @@ import java.net.URLEncoder;
 public class FileUtils {
     public static AjaxVoResult saveUploadFile(MultipartFile file){
         String basePath = "~".concat(File.separator).concat("enclosure");
-        String filePath = basePath.concat(File.separator).concat(file.getOriginalFilename());
+        String filePath = basePath.concat(File.separator).concat(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())).concat("-").concat(file.getOriginalFilename());
         File dir = new File(basePath);
         if (!dir.exists()){
             dir.mkdirs();

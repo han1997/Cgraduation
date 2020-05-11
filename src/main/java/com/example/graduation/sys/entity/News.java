@@ -2,10 +2,13 @@ package com.example.graduation.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
+import java.beans.Transient;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -57,6 +60,7 @@ public class News implements Serializable {
      * 附件
      */
     private String enclosure;
+
 
 
 }

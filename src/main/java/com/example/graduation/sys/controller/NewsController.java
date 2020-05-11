@@ -11,17 +11,16 @@ import com.example.graduation.sys.service.INewsService;
 import com.example.graduation.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -52,7 +51,7 @@ public class NewsController {
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(News news,MultipartFile file) {
+    public AjaxVoResult add(News news) {
         /**
          *
          * @description: 新增用户
@@ -60,19 +59,6 @@ public class NewsController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
-        String enclosure = "";
-        if (file != null && file.getSize() > 0) {
-//        如果上传了附件
-            AjaxVoResult ajaxVoResult = FileUtils.saveUploadFile(file);
-            if (ajaxVoResult.getStatusCode() == 200) {
-                String filePath = (String) ajaxVoResult.getDatas();
-//                将\转为/保存数据库
-                String[] split = filePath.split("/|\\\\");
-                filePath = split[0] + "/" + split[1] + "/" + split[2];
-                enclosure = "http://35.241.68.51:8080/sys/news/downloadEnclosure?filePath=" + filePath;
-            }
-        }
-        news.setEnclosure(enclosure);
         boolean b = newsService.add(news);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
@@ -162,6 +148,27 @@ public class NewsController {
             return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), "附件不存在");
 
         }
+    }
+
+    @PostMapping("/upload")
+    public AjaxVoResult upload(@RequestBody MultipartFile file){
+        String enclosure = "";
+        if (file != null && file.getSize() > 0) {
+//        如果上传了附件
+            AjaxVoResult ajaxVoResult = FileUtils.saveUploadFile(file);
+            if (ajaxVoResult.getStatusCode() == 200) {
+                String filePath = (String) ajaxVoResult.getDatas();
+//                将\转为/保存数据库
+                String[] split = filePath.split("/|\\\\");
+                filePath = split[0] + "/" + split[1] + "/" + split[2];
+                enclosure = "http://35.241.68.51:8080/sys/news/downloadEnclosure?filePath=" + filePath;
+                Map<String,String> returnMap = new HashMap<>();
+                returnMap.put("fileName",file.getOriginalFilename());
+                returnMap.put("enclosure",enclosure);
+                return new AjaxVoResult(StatusCode.SUCCESS.getCode(),StatusCode.SUCCESS.getMessage(),returnMap);
+            }
+        }
+        return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(),StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(),"上传文件为空？");
     }
 
 }

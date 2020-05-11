@@ -132,43 +132,7 @@ public class NewsController {
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
     }
 
-    @RequestMapping("/downloadEnclosure")
-    public AjaxVoResult downloadEnclosure(HttpServletRequest request, HttpServletResponse response, String filePath) {
-        String[] split = filePath.split("/");
-        String fileName = split[2];
-        File file = new File(filePath);
-        if (file.exists()) {
-//            文件存在
-            FileUtils.download(file, fileName, request, response);
-//            还加return AjaxVoResult 会发生Cannot call sendError() after the response has been committed 错误，因为download方法里面已经将要返回的数据写入response里面了
-//            所以return null;
-//            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), "下载成功");
-            return null;
-        } else {
-            return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), "附件不存在");
 
-        }
-    }
 
-    @PostMapping("/upload")
-    public AjaxVoResult upload(@RequestBody MultipartFile file){
-        String enclosure = "";
-        if (file != null && file.getSize() > 0) {
-//        如果上传了附件
-            AjaxVoResult ajaxVoResult = FileUtils.saveUploadFile(file);
-            if (ajaxVoResult.getStatusCode() == 200) {
-                String filePath = (String) ajaxVoResult.getDatas();
-//                将\转为/保存数据库
-                String[] split = filePath.split("/|\\\\");
-                filePath = split[0] + "/" + split[1] + "/" + split[2];
-                enclosure = "http://35.241.68.51:8080/sys/news/downloadEnclosure?filePath=" + filePath;
-                Map<String,String> returnMap = new HashMap<>();
-                returnMap.put("fileName",file.getOriginalFilename());
-                returnMap.put("enclosure",enclosure);
-                return new AjaxVoResult(StatusCode.SUCCESS.getCode(),StatusCode.SUCCESS.getMessage(),returnMap);
-            }
-        }
-        return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(),StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(),"上传文件为空？");
-    }
 
 }

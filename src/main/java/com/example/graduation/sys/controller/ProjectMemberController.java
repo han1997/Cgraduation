@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2020-05-04
  */
 @RestController
-@Api(tags = "用户相关接口", description = "提供用户相关的 Rest API")
+@Api(tags = "项目成员相关接口", description = "提供用户相关的 Rest API")
 @RequestMapping("/sys/project-member")
 public class ProjectMemberController {
     @Autowired

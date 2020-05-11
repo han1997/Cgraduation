@@ -6,10 +6,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
+import com.example.graduation.sys.dto.ProjectMemberDTO;
+import com.example.graduation.sys.entity.Project;
 import com.example.graduation.sys.entity.ProjectMember;
 import com.example.graduation.sys.service.IProjectMemberService;
+import com.example.graduation.sys.service.IProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +36,8 @@ import java.util.List;
 @RequestMapping("/sys/project-member")
 public class ProjectMemberController {
     @Autowired
+    IProjectService projectService;
+    @Autowired
     IProjectMemberService projectMemberService;
 
     @RequestMapping("/list")
@@ -39,8 +45,18 @@ public class ProjectMemberController {
     public AjaxVoResult list(ProjectMember projectMember) {
         QueryWrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
         List<ProjectMember> projectMembers = projectMemberService.list(qw);
+        List<ProjectMemberDTO> projectMemberDTOS = new ArrayList<>();
         if (projectMembers.size() > 0) {
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMembers);
+            projectMembers.forEach(projectMember1 -> {
+//                封装projectMemberDTO
+                ProjectMemberDTO projectMemberDTO = new ProjectMemberDTO();
+                BeanUtils.copyProperties(projectMember1,projectMemberDTO);
+                Project byId = projectService.getById(projectMember1.getProjectId());
+                projectMemberDTO.setProjectName(byId.getProjectName());
+                projectMemberDTOS.add(projectMemberDTO);
+            });
+
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMemberDTOS);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
     }

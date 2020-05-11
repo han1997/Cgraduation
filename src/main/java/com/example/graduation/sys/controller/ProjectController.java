@@ -46,6 +46,12 @@ public class ProjectController {
         Wrapper<Project> qw = new QueryWrapper<>(project);
         List<Project> projects = projectService.list();
         if (projects.size() > 0) {
+            projects.forEach(project1 -> {
+                QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("user_no",project1.getProjectOwner());
+                User user = userService.getOne(queryWrapper);
+                project1.setProjectOwner(user.getUserName());
+            });
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projects);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

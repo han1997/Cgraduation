@@ -28,7 +28,7 @@ public class NewsController {
     @Autowired
     INewsService newsService;
 
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public AjaxVoResult list(News news) {
         QueryWrapper<News> qw = new QueryWrapper<>(news);
         qw.orderByDesc("release_time");

@@ -10,6 +10,7 @@ import com.example.graduation.sys.entity.ProjectMessage;
 import com.example.graduation.sys.service.IProjectMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,7 @@ public class ProjectMessageController {
     @Autowired
     IProjectMessageService projectMessageService;
 
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public AjaxVoResult list(ProjectMessage projectMessage) {
         QueryWrapper<ProjectMessage> qw = new QueryWrapper<>(projectMessage);
         List<ProjectMessage> projectMessages = projectMessageService.list(qw);

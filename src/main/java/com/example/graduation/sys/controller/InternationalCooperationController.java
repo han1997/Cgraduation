@@ -10,6 +10,7 @@ import com.example.graduation.sys.entity.InternationalCooperation;
 import com.example.graduation.sys.service.IInternationalCooperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +32,7 @@ public class InternationalCooperationController {
     @Autowired
     IInternationalCooperationService internationalCooperationService;
 
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public AjaxVoResult list(InternationalCooperation internationalCooperation) {
         QueryWrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
         List<InternationalCooperation> internationalCooperations = internationalCooperationService.list(qw);

@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +42,7 @@ public class ProjectController {
     IProjectService projectService;
 
     @ApiOperation("管理员分页查询所有项目接口")
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public AjaxVoResult list(Project project) {
         Wrapper<Project> qw = new QueryWrapper<>(project);
         List<Project> projects = projectService.list(qw);

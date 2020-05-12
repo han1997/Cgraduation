@@ -11,6 +11,7 @@ import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ public class CourseController {
     @Autowired
     ICourseService courseService;
 
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public AjaxVoResult list(Course course) {
         QueryWrapper<Course> qw = new QueryWrapper<>(course);
         qw.orderByDesc("course_time");

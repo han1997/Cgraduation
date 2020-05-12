@@ -13,9 +13,11 @@ import com.example.graduation.sys.service.IProjectMemberService;
 import com.example.graduation.sys.service.IProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,32 +42,19 @@ public class ProjectMemberController {
     @Autowired
     IProjectMemberService projectMemberService;
 
-    @RequestMapping("/list")
+    @GetMapping("/list")
     @ApiOperation("管理员查询所有项目成员接口")
     public AjaxVoResult list(ProjectMember projectMember) {
         QueryWrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
         List<ProjectMember> projectMembers = projectMemberService.list(qw);
-        List<ProjectMemberDTO> projectMemberDTOS = new ArrayList<>();
         if (projectMembers.size() > 0) {
-            projectMembers.forEach(projectMember1 -> {
-//                封装projectMemberDTO
-                ProjectMemberDTO projectMemberDTO = new ProjectMemberDTO();
-                BeanUtils.copyProperties(projectMember1,projectMemberDTO);
-                Project byId = projectService.getById(projectMember1.getProjectId());
-                if (byId == null){
-                    return;
-                }
-                projectMemberDTO.setProject(byId);
-                projectMemberDTOS.add(projectMemberDTO);
-            });
-
-            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMemberDTOS);
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), projectMembers);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
     }
 
     @PostMapping("/add")
-    public AjaxVoResult add(ProjectMember projectMember) {
+    public AjaxVoResult add(ProjectMember projectMember, String projectPsd) {
         /**
          *
          * @description: 新增用户
@@ -73,7 +62,27 @@ public class ProjectMemberController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
-        boolean b = projectMemberService.save(projectMember);
+        String projectId = projectMember.getProjectId();
+        boolean b = false;
+        if (StringUtils.isNotBlank(projectId)) {
+//            获取项目密码
+            Project byId = projectService.getById(projectId);
+            if (null != byId) {
+//                    项目密码验证
+                if (projectPsd.equals(byId.getProjectPsd())) {
+//                    添加验证是否已存在
+                    QueryWrapper<ProjectMember> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("project_member_id",projectMember.getProjectMemberId());
+                    ProjectMember one = projectMemberService.getOne(queryWrapper);
+                    if (null != one){
+                        return new AjaxVoResult(StatusCode.USERNO_EXISTS.getCode(), StatusCode.USERNO_EXISTS.getMessage(), null);
+                    }
+                    b = projectMemberService.save(projectMember);
+                }else {
+                    return new AjaxVoResult(StatusCode.ADMIN_USER_WRONG_PASSWORD.getCode(), StatusCode.ADMIN_USER_WRONG_PASSWORD.getMessage(), null);
+                }
+            }
+        }
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
         }
@@ -139,6 +148,15 @@ public class ProjectMemberController {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), page1);
         }
         return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);
+    }
+
+    @ApiOperation("从学生学号查询项目信息，项目发布人姓名")
+    @GetMapping("/getProject")
+    public AjaxVoResult getProject(String projectMemberId) {
+        if (StringUtils.isNotBlank(projectMemberId)) {
+            return projectMemberService.getProject(projectMemberId);
+        }
+        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "没有参数");
     }
 
 }

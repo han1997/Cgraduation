@@ -54,7 +54,7 @@ public class UserController {
     IUserService userService;
 
     @ApiOperation("管理员查询所有用户接口")
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public AjaxVoResult list(User user) {
         QueryWrapper<User> qw = new QueryWrapper<>(user);
         List<User> users = userService.list(qw);

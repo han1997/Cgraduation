@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @Api(tags = "通用接口")
 public class IndexController {
-    @RequestMapping("/index")
+    @GetMapping("/index")
     public String index(){
         return "index";
     }

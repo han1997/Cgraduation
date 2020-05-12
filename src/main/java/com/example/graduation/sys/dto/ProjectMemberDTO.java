@@ -40,6 +40,24 @@ public class ProjectMemberDTO {
      */
     private String projectMemberJob;
 
-    private Project project;
+    /**
+     * 项目名
+     */
+    private String projectName;
+
+    /**
+     * 项目所有人 姓名
+     */
+    private String projectOwner;
+
+    /**
+     * 项目密码
+     */
+    private String projectPsd;
+
+    /**
+     * 项目描述
+     */
+    private String projectDesc;
 
 }

@@ -44,7 +44,7 @@ public class ProjectController {
     @RequestMapping("/list")
     public AjaxVoResult list(Project project) {
         Wrapper<Project> qw = new QueryWrapper<>(project);
-        List<Project> projects = projectService.list();
+        List<Project> projects = projectService.list(qw);
         if (projects.size() > 0) {
             projects.forEach(project1 -> {
                 QueryWrapper<User> queryWrapper = new QueryWrapper<>();

@@ -14,6 +14,5 @@ import java.util.List;
  * @since 2020-05-04
  */
 public interface ProjectMapper extends BaseMapper<Project> {
-    List<Project> selectByUserNo();
 
 }

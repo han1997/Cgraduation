@@ -52,7 +52,10 @@ public class ProjectMemberController {
                 ProjectMemberDTO projectMemberDTO = new ProjectMemberDTO();
                 BeanUtils.copyProperties(projectMember1,projectMemberDTO);
                 Project byId = projectService.getById(projectMember1.getProjectId());
-                projectMemberDTO.setProjectName(byId.getProjectName());
+                if (byId == null){
+                    return;
+                }
+                projectMemberDTO.setProject(byId);
                 projectMemberDTOS.add(projectMemberDTO);
             });
 

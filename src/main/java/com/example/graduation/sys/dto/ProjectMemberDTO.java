@@ -3,6 +3,8 @@ package com.example.graduation.sys.dto;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.example.graduation.sys.entity.Project;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -28,9 +30,6 @@ public class ProjectMemberDTO {
      */
     private String projectId;
 
-//    项目名称
-    private String projectName;
-
     /**
      * 项目成员id
      */
@@ -41,5 +40,6 @@ public class ProjectMemberDTO {
      */
     private String projectMemberJob;
 
+    private Project project;
 
 }

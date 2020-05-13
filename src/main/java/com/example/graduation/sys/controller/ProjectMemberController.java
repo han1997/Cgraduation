@@ -72,8 +72,15 @@ public class ProjectMemberController {
                 if (projectPsd.equals(byId.getProjectPsd())) {
 //                    添加验证是否已存在
                     QueryWrapper<ProjectMember> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("project_id",projectMember.getProjectId());
                     queryWrapper.eq("project_member_id",projectMember.getProjectMemberId());
-                    ProjectMember one = projectMemberService.getOne(queryWrapper);
+                    ProjectMember one = null;
+                    try {
+                        one = projectMemberService.getOne(queryWrapper);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "数据库查询到多条数据--已重复添加该学号");
+                    }
                     if (null != one){
                         return new AjaxVoResult(StatusCode.USERNO_EXISTS.getCode(), StatusCode.USERNO_EXISTS.getMessage(), null);
                     }

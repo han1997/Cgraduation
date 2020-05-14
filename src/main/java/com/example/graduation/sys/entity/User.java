@@ -62,12 +62,6 @@ public class User implements Serializable {
     @Excel(name = "用户角色1管理员2教师3学生", width = 30, isImportField = "true_st")
     private String userRole;
 
-    /**
-     * 学生层次
-     */
-    @ApiModelProperty("用户层次")
-    @Excel(name = "用户层次", width = 30, isImportField = "true_st")
-    private String userLevel;
 
     /**
      * 上次登入时间
@@ -82,6 +76,5 @@ public class User implements Serializable {
     @ApiModelProperty("用户上次登出时间")
     @Excel(name = "用户上次登出时间", width = 30, isImportField = "true_st")
     private String lastLogoutTime;
-
 
 }

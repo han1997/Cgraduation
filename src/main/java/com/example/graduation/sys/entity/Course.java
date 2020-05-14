@@ -49,11 +49,6 @@ public class Course implements Serializable {
     private String userLevel;
 
     /**
-     * 课程密码
-     */
-    private String coursePsd;
-
-    /**
      * 授课时间
      */
     private String courseTime;

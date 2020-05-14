@@ -133,7 +133,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             } else {
                 return new AjaxVoResult(StatusCode.ADMIN_USER_NOT_FOUND.getCode(), StatusCode.ADMIN_USER_NOT_FOUND.getMessage(), null);
             }
-            return new AjaxVoResult(StatusCode.USER_LOGOUT_SUCCESS.getCode(), StatusCode.USER_LOGOUT_SUCCESS.getMessage(), null);
+            return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), null);
         }else {
 //        session没有user信息，用户未登录
             return new AjaxVoResult(StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getCode(), StatusCode.RESOURCE_NOT_MESSAGE_EXIT.getMessage(), null);

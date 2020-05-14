@@ -32,7 +32,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         ProjectMember projectMember = new ProjectMember();
         projectMember.setProjectId(project.getProjectId().toString());
         projectMember.setProjectMemberId(project.getProjectOwner());
-        projectMember.setProjectMemberJob("掌门人");
         boolean b1 = projectMemberService.save(projectMember);
         if (b & b1) {
             return true;

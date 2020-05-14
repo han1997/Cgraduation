@@ -38,10 +38,5 @@ public class ProjectMember implements Serializable {
      */
     private String projectMemberId;
 
-    /**
-     * 项目成员职务
-     */
-    private String projectMemberJob;
-
 
 }

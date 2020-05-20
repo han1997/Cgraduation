@@ -8,6 +8,8 @@ import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.InternationalCooperation;
 import com.example.graduation.sys.service.IInternationalCooperationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +30,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/international-cooperation")
+@Api(tags = "国际合作相关接口")
 public class InternationalCooperationController {
     @Autowired
     IInternationalCooperationService internationalCooperationService;
 
     @GetMapping("/list")
+    @ApiOperation(value = "获取所有国际合作项目信息")
     public AjaxVoResult list(InternationalCooperation internationalCooperation) {
         QueryWrapper<InternationalCooperation> qw = new QueryWrapper<>(internationalCooperation);
         List<InternationalCooperation> internationalCooperations = internationalCooperationService.list(qw);
@@ -43,6 +47,7 @@ public class InternationalCooperationController {
     }
 
     @PostMapping("/add")
+    @ApiOperation(value = "新增国际合作项目信息")
     public AjaxVoResult add(InternationalCooperation internationalCooperation) {
         /**
          *
@@ -60,6 +65,7 @@ public class InternationalCooperationController {
 
     @Transactional
     @PostMapping("/delete")
+    @ApiOperation(value = "删除国际合作项目信息")
     public AjaxVoResult delete(int[] internationalCooperationIds) {
         /**
          *
@@ -82,6 +88,7 @@ public class InternationalCooperationController {
     }
 
     @PostMapping("/update")
+    @ApiOperation(value = "更新国际合作项目信息")
     public AjaxVoResult update(InternationalCooperation internationalCooperation) {
         /**
          *
@@ -98,6 +105,7 @@ public class InternationalCooperationController {
     }
 
     @PostMapping("/get")
+    @ApiOperation(value = "获取前11条国际合作项目信息")
     public AjaxVoResult get(Page page, InternationalCooperation internationalCooperation) {
         /**
          *

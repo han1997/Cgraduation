@@ -7,6 +7,11 @@ import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.INewsService;
+import com.example.graduation.utils.TimeUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +28,14 @@ import java.util.List;
  * @since 2020-05-04
  */
 @RestController
+@Api(tags = "新闻相关接口")
 @RequestMapping("/sys/news")
 public class NewsController {
     @Autowired
     INewsService newsService;
 
     @GetMapping("/list")
+    @ApiOperation(value = "根据输入字段获取所有新闻")
     public AjaxVoResult list(News news) {
         QueryWrapper<News> qw = new QueryWrapper<>(news);
         qw.orderByDesc("release_time");
@@ -44,14 +51,18 @@ public class NewsController {
     }
 
     @PostMapping("/add")
+    @ApiOperation(value = "根据输入信息添加新闻数据")
     public AjaxVoResult add(News news) {
         /**
          *
-         * @description: 新增用户
+         * @description: 新增新闻
          * @param news
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
+        if (StringUtils.isBlank(news.getReleaseTime())){
+            news.setReleaseTime(TimeUtils.getDateTime());
+        }
         boolean b = newsService.add(news);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
@@ -61,6 +72,7 @@ public class NewsController {
 
     @Transactional
     @PostMapping("/delete")
+    @ApiOperation(value = "根据newsId删除新闻数据")
     public AjaxVoResult delete(int[] newsIds) {
         /**
          *
@@ -83,6 +95,7 @@ public class NewsController {
     }
 
     @PostMapping("/update")
+    @ApiOperation(value = "根据输入信息更新新闻数据")
     public AjaxVoResult update(News news) {
         /**
          *
@@ -99,6 +112,7 @@ public class NewsController {
     }
 
     @PostMapping("/get")
+    @ApiOperation(value = "根据输入信息获取前11条新闻数据")
     public AjaxVoResult get(Page page, News news) {
         /**
          *

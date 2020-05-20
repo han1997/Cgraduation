@@ -8,6 +8,8 @@ import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.ProjectMessage;
 import com.example.graduation.sys.service.IProjectMessageService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +28,14 @@ import java.util.List;
  * @since 2020-05-07
  */
 @RestController
+@Api(tags = "项目消息相关接口")
 @RequestMapping("/sys/project-message")
 public class ProjectMessageController {
     @Autowired
     IProjectMessageService projectMessageService;
 
     @GetMapping("/list")
+    @ApiOperation(value = "获取所有项目消息")
     public AjaxVoResult list(ProjectMessage projectMessage) {
         QueryWrapper<ProjectMessage> qw = new QueryWrapper<>(projectMessage);
         List<ProjectMessage> projectMessages = projectMessageService.list(qw);
@@ -43,6 +47,7 @@ public class ProjectMessageController {
     }
 
     @PostMapping("/add")
+    @ApiOperation(value = "新增项目消息")
     public AjaxVoResult add(ProjectMessage projectMessage) {
         /**
          *
@@ -60,6 +65,7 @@ public class ProjectMessageController {
 
     @PostMapping("/delete")
     @Transactional
+    @ApiOperation(value = "删除项目消息")
     public AjaxVoResult delete(int projectMessageId) {
         /**
          *
@@ -78,6 +84,7 @@ public class ProjectMessageController {
     }
 
     @PostMapping("/update")
+    @ApiOperation(value = "更新项目消息")
     public AjaxVoResult update(ProjectMessage projectMessage) {
         /**
          *
@@ -94,6 +101,7 @@ public class ProjectMessageController {
     }
 
     @PostMapping("/get")
+    @ApiOperation(value = "获取前11条项目消息")
     public AjaxVoResult get(Page page, ProjectMessage projectMessage) {
         /**
          *

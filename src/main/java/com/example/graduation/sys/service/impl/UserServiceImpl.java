@@ -104,14 +104,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 log.info("login_sessionid" + session.getId());
 
 //                返回user信息--去除隐私信息
-                userFromDb.setUserId(null);
+//                userFromDb.setUserId(null);
                 userFromDb.setUserPsd("******");
                 log.info(userFromDb.toString() + "登录");
                 return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), userFromDb);
             }
             return new AjaxVoResult(StatusCode.ADMIN_USER_WRONG_PASSWORD.getCode(), StatusCode.ADMIN_USER_WRONG_PASSWORD.getMessage(), null);
         }
-        return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), null);
+        return new AjaxVoResult(StatusCode.ADMIN_USER_NOT_FOUND.getCode(), StatusCode.ADMIN_USER_NOT_FOUND.getMessage(), null);
     }
 
     @Override

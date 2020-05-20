@@ -9,6 +9,8 @@ import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.Course;
 import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.ICourseService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,11 +31,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/course")
+@Api(tags = "课程相关接口")
 public class CourseController {
     @Autowired
     ICourseService courseService;
 
     @GetMapping("/list")
+    @ApiOperation(value = "获取所有课程信息接口")
     public AjaxVoResult list(Course course) {
         QueryWrapper<Course> qw = new QueryWrapper<>(course);
         qw.orderByDesc("course_time");
@@ -45,6 +49,7 @@ public class CourseController {
     }
 
     @PostMapping("/add")
+    @ApiOperation(value = "新增课程接口")
     public AjaxVoResult add(Course course) {
         /**
          *
@@ -58,6 +63,7 @@ public class CourseController {
 
     @Transactional
     @PostMapping("/delete")
+    @ApiOperation(value = "删除课程接口")
     public AjaxVoResult delete(int[] courseIds) {
         /**
          *
@@ -80,6 +86,7 @@ public class CourseController {
     }
 
     @PostMapping("/update")
+    @ApiOperation(value = "更新课程接口")
     public AjaxVoResult update(Course course) {
         /**
          *
@@ -96,6 +103,7 @@ public class CourseController {
     }
 
     @PostMapping("/get")
+    @ApiOperation(value = "获取前11个课程接口")
     public AjaxVoResult get(Page page, Course course) {
         /**
          *

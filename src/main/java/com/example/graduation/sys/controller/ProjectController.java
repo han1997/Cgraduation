@@ -41,7 +41,7 @@ public class ProjectController {
     @Autowired
     IProjectService projectService;
 
-    @ApiOperation("管理员分页查询所有项目接口")
+    @ApiOperation("分页查询所有项目接口")
     @GetMapping("/list")
     public AjaxVoResult list(Project project) {
         Wrapper<Project> qw = new QueryWrapper<>(project);
@@ -59,6 +59,7 @@ public class ProjectController {
     }
 
     @PostMapping("/add")
+    @ApiOperation("新增项目接口")
     public AjaxVoResult add(Project project) {
         /**
          *
@@ -76,6 +77,7 @@ public class ProjectController {
 
     @Transactional
     @PostMapping("/delete")
+    @ApiOperation("删除项目接口")
     public AjaxVoResult delete(int[] projectIds) {
         /**
          *
@@ -98,6 +100,7 @@ public class ProjectController {
     }
 
     @PostMapping("/update")
+    @ApiOperation("更新项目接口")
     public AjaxVoResult update(Project project) {
         /**
          *
@@ -114,6 +117,7 @@ public class ProjectController {
     }
 
     @PostMapping("/get")
+    @ApiOperation("获取前11条项目接口")
     public AjaxVoResult get(Page page, Project project) {
         /**
          *

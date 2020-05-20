@@ -43,7 +43,7 @@ public class ProjectMemberController {
     IProjectMemberService projectMemberService;
 
     @GetMapping("/list")
-    @ApiOperation("管理员查询所有项目成员接口")
+    @ApiOperation("查询所有项目成员接口")
     public AjaxVoResult list(ProjectMember projectMember) {
         QueryWrapper<ProjectMember> qw = new QueryWrapper<>(projectMember);
         List<ProjectMember> projectMembers = projectMemberService.list(qw);
@@ -54,6 +54,7 @@ public class ProjectMemberController {
     }
 
     @PostMapping("/add")
+    @ApiOperation("新增项目成员信息")
     public AjaxVoResult add(ProjectMember projectMember, String projectPsd) {
         /**
          *
@@ -98,6 +99,7 @@ public class ProjectMemberController {
 
     @Transactional
     @PostMapping("/delete")
+    @ApiOperation("删除项目成员信息")
     public AjaxVoResult delete(int[] projectMemberIds) {
         /**
          *
@@ -120,6 +122,7 @@ public class ProjectMemberController {
     }
 
     @PostMapping("/update")
+    @ApiOperation("更新项目成员信息")
     public AjaxVoResult update(ProjectMember projectMember) {
         /**
          *
@@ -136,6 +139,7 @@ public class ProjectMemberController {
     }
 
     @PostMapping("/get")
+    @ApiOperation("获取前11条项目成员信息")
     public AjaxVoResult get(Page page, ProjectMember projectMember) {
         /**
          *

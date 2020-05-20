@@ -113,7 +113,9 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        userService.psdEnc(user);
+        if (StringUtils.isNotBlank(user.getUserPsd())){
+            userService.psdEnc(user);
+        }
         boolean b = userService.updateById(user);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);

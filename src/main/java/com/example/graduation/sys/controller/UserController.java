@@ -113,11 +113,41 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        if (StringUtils.isNotBlank(newPsd)){
-            user.setUserPsd(newPsd);
-            userService.psdEnc(user);
+        boolean b;
+        User userFromDb = null;
+        if (user.getUserId() == null){
+//            没有传id，通过学号修改
+            if (StringUtils.isBlank(user.getUserNo())){
+                return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "需要传学号");
+            }
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_no",user.getUserNo());
+            userFromDb = userService.getOne(queryWrapper);
         }
-        boolean b = userService.updateById(user);
+        if (userFromDb == null){
+            return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "没有该学生信息");
+        }
+//            如果是修改密码
+        if (StringUtils.isNotBlank(newPsd)){
+            boolean b1 = false;
+            try {
+                b1 = PasswordStorage.verifyPassword(user.getUserPsd(), userFromDb.getUserPsd());
+            } catch (PasswordStorage.CannotPerformOperationException e) {
+                e.printStackTrace();
+            } catch (PasswordStorage.InvalidHashException e) {
+                e.printStackTrace();
+            }
+            if (b1){
+//                    密码校验通过
+                user.setUserId(userFromDb.getUserId());
+                user.setUserPsd(newPsd);
+                userService.psdEnc(user);
+            }
+            else {
+                return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "旧密码错误");
+            }
+        }
+        b = userService.updateById(user);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
         }

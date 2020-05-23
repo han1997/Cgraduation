@@ -105,7 +105,7 @@ public class UserController {
 
     @ApiOperation("更新用户接口")
     @PostMapping("/update")
-    public AjaxVoResult update(User user) {
+    public AjaxVoResult update(User user,String newPsd) {
         /**
          *
          * @description: 通过userId更新用户信息
@@ -113,7 +113,8 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        if (StringUtils.isNotBlank(user.getUserPsd())){
+        if (StringUtils.isNotBlank(newPsd)){
+            user.setUserPsd(newPsd);
             userService.psdEnc(user);
         }
         boolean b = userService.updateById(user);
@@ -167,13 +168,13 @@ public class UserController {
     }
 
     @ApiOperation("用户注销接口")
-    @RequestMapping("/logout")
+    @PostMapping("/logout")
     public AjaxVoResult logout(HttpServletRequest request, HttpServletResponse response) {
         return userService.logout(request, response);
     }
 
     @ApiOperation("管理员Excel导入接口")
-    @RequestMapping("/importExcel")
+    @PostMapping("/importExcel")
     public AjaxVoResult importExcel(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
 //        判断上传文件格式
         String originalFilename = file.getOriginalFilename();
@@ -215,7 +216,7 @@ public class UserController {
     }
 
     @ApiOperation("管理员Excel下载接口")
-    @RequestMapping("/downloadExcel")
+    @PostMapping("/downloadExcel")
     public AjaxVoResult downloadExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<User> users = userService.list();
         String fileName = users.get(0).getClass().getSimpleName() + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".xls";

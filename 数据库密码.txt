@@ -1,0 +1,16 @@
+1. <property name="url"
+			value="jdbc:sqlserver://localhost:1433;DatabaseName=bjetc" />
+		<!--<property name="url" value="jdbc:sqlserver://localhost:1433;DatabaseName=nbs.jyfs" 
+			/> -->
+		<!-- 配置数据库用户名 -->
+		<property name="username" value="sa" />
+		<!-- 配置数据库密码 -->
+		<property name="password" value="sqladmin" />
+
+2. MySQL
+root
+admin
+
+3. Orecle server
+--
+sqladmin

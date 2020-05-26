@@ -1,13 +1,11 @@
 package com.example.graduation.sys.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.Course;
-import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.service.ICourseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

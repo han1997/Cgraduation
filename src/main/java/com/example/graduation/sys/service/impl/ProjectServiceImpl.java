@@ -1,12 +1,11 @@
 package com.example.graduation.sys.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.graduation.sys.entity.Project;
 import com.example.graduation.sys.entity.ProjectMember;
 import com.example.graduation.sys.mapper.ProjectMapper;
-import com.example.graduation.sys.mapper.ProjectMemberMapper;
 import com.example.graduation.sys.service.IProjectMemberService;
 import com.example.graduation.sys.service.IProjectService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

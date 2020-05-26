@@ -9,10 +9,8 @@ import com.example.graduation.sys.entity.User;
 import com.example.graduation.sys.mapper.UserMapper;
 import com.example.graduation.sys.service.IUserService;
 import com.example.graduation.utils.CookieUtil;
-import com.example.graduation.utils.JwtUtil;
 import com.example.graduation.utils.PasswordStorage;
 import com.example.graduation.utils.TimeUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 
 /**
  * <p>

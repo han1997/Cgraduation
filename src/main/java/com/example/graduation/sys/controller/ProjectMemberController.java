@@ -1,12 +1,10 @@
 package com.example.graduation.sys.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
-import com.example.graduation.sys.dto.ProjectMemberDTO;
 import com.example.graduation.sys.entity.Project;
 import com.example.graduation.sys.entity.ProjectMember;
 import com.example.graduation.sys.service.IProjectMemberService;
@@ -14,7 +12,6 @@ import com.example.graduation.sys.service.IProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;

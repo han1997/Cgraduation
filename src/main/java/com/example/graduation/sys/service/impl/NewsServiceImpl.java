@@ -1,15 +1,12 @@
 package com.example.graduation.sys.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.graduation.sys.entity.News;
 import com.example.graduation.sys.mapper.NewsMapper;
 import com.example.graduation.sys.service.INewsService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.graduation.utils.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * <p>

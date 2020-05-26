@@ -44,9 +44,7 @@ public class UploadFileController {
     @ApiOperation(value = "根据输入字段获取所有下载文件")
     public AjaxVoResult list(UploadFile uploadFile) {
         QueryWrapper<UploadFile> qw = new QueryWrapper<>(uploadFile);
-        qw.orderByDesc("release_time");
         List<UploadFile> uploadFiles = uploadFileService.list(qw);
-
         if (uploadFiles.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), uploadFiles);
         }

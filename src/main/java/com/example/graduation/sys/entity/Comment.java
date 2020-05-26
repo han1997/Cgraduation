@@ -9,49 +9,53 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 项目消息
+ * 评论/回复
  * </p>
  *
  * @author test
- * @since 2020-05-07
+ * @since 2020-05-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class ProjectMessage implements Serializable {
+public class Comment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "pm_id", type = IdType.AUTO)
-    private Integer pmId;
-
     /**
-     * 项目id
+     * 评论id
      */
-    private String projectId;
+    @TableId(value = "comment_id", type = IdType.AUTO)
+    private Integer commentId;
 
     /**
-     * 发布人编号
+     * 帖子Id
+
      */
-    private String providerId;
+    private String discussId;
 
     /**
-     * 消息标题
+     * 评论者名字
      */
-    private String messageTitle;
+    private String userName;
 
     /**
-     * 消息内容
+     * 被回复评论id
      */
-    private String messageContent;
+    private String refCommentId;
 
     /**
-     * 消息类型1通知2会议记录3讨论
+     * 被回复评论者名字
      */
-    private String messageType;
+    private String refUserName;
 
     /**
-     * 发布时间
+     * 评论内容
+     */
+    private String commentContent;
+
+    /**
+     * 评论时间
      */
     private String publishTime;
 

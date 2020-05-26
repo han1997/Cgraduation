@@ -102,7 +102,7 @@ public class UserController {
 
     @ApiOperation("更新用户接口")
     @PostMapping("/update")
-    public AjaxVoResult update(User user) {
+    public AjaxVoResult update(User user,String newPsd) {
         /**
          *
          * @description: 通过userId更新用户信息
@@ -110,10 +110,41 @@ public class UserController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 5:18 下午
          */
-        if (StringUtils.isNotBlank(user.getUserPsd())){
-            userService.psdEnc(user);
+        boolean b;
+        User userFromDb = null;
+        if (user.getUserId() == null){
+//            没有传id，通过学号修改
+            if (StringUtils.isBlank(user.getUserNo())){
+                return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "需要传学号");
+            }
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_no",user.getUserNo());
+            userFromDb = userService.getOne(queryWrapper);
         }
-        boolean b = userService.updateById(user);
+        if (userFromDb == null){
+            return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "没有该学生信息");
+        }
+//            如果是修改密码
+        if (StringUtils.isNotBlank(newPsd)){
+            boolean b1 = false;
+            try {
+                b1 = PasswordStorage.verifyPassword(user.getUserPsd(), userFromDb.getUserPsd());
+            } catch (PasswordStorage.CannotPerformOperationException e) {
+                e.printStackTrace();
+            } catch (PasswordStorage.InvalidHashException e) {
+                e.printStackTrace();
+            }
+            if (b1){
+//                    密码校验通过
+                user.setUserId(userFromDb.getUserId());
+                user.setUserPsd(newPsd);
+                userService.psdEnc(user);
+            }
+            else {
+                return new AjaxVoResult(StatusCode.ERROR.getCode(), StatusCode.ERROR.getMessage(), "旧密码错误");
+            }
+        }
+        b = userService.updateById(user);
         if (b) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), b);
         }
@@ -164,13 +195,13 @@ public class UserController {
     }
 
     @ApiOperation("用户注销接口")
-    @RequestMapping("/logout")
+    @PostMapping("/logout")
     public AjaxVoResult logout(HttpServletRequest request, HttpServletResponse response) {
         return userService.logout(request, response);
     }
 
     @ApiOperation("管理员Excel导入接口")
-    @RequestMapping("/importExcel")
+    @PostMapping("/importExcel")
     public AjaxVoResult importExcel(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
 //        判断上传文件格式
         String originalFilename = file.getOriginalFilename();
@@ -212,7 +243,7 @@ public class UserController {
     }
 
     @ApiOperation("管理员Excel下载接口")
-    @RequestMapping("/downloadExcel")
+    @PostMapping("/downloadExcel")
     public AjaxVoResult downloadExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<User> users = userService.list();
         String fileName = users.get(0).getClass().getSimpleName() + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".xls";

@@ -41,7 +41,7 @@ public class CommentController {
     @ApiOperation(value = "获取评论接口")
     public AjaxVoResult list(Comment comment) {
         QueryWrapper<Comment> qw = new QueryWrapper<>(comment);
-        qw.orderByDesc("publish_time");
+        qw.orderByAsc("publish_time");
         List<Comment> comments = commentService.list(qw);
         if (comments.size() > 0) {
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), comments);

@@ -7,8 +7,10 @@ import com.example.graduation.constants.StatusCode;
 import com.example.graduation.sys.dto.AjaxVoResult;
 import com.example.graduation.sys.entity.Comment;
 import com.example.graduation.sys.service.ICommentService;
+import com.example.graduation.utils.TimeUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +59,9 @@ public class CommentController {
          * @return: com.example.graduation.sys.dto.AjaxVoResult
          * @time: 2020/5/5 4:12 下午
          */
+        if (StringUtils.isBlank(comment.getPublishTime())){
+            comment.setPublishTime(TimeUtils.getDateTime());
+        }
         boolean save = commentService.save(comment);
         if (save){
             return new AjaxVoResult(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), comment);

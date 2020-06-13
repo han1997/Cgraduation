@@ -207,7 +207,7 @@ public class UserController {
 //        判断上传文件格式
         String originalFilename = file.getOriginalFilename();
         String[] split = originalFilename.split("\\.");
-        if (!"xls".equals(split[split.length - 1]) || !"xlsx".equals(split[split.length - 1])) {
+        if (!"xls".equals(split[split.length - 1]) && !"xlsx".equals(split[split.length - 1])) {
             return new AjaxVoResult(StatusCode.RESOURCE_TYPE_ERROR.getCode(), StatusCode.RESOURCE_TYPE_ERROR.getMessage(), "Excel导入出错");
         }
 
